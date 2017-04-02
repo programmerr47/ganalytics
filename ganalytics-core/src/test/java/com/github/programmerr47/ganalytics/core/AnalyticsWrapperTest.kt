@@ -5,14 +5,21 @@ import org.junit.Test
 
 class AnalyticsWrapperTest {
     @Test
-    fun checkReturnName() {
-        val sampleI = AnalyticsWrapper().create(SampleInterface::class)
-        assertEquals("method1", sampleI.method1())
-        assertEquals("method2", sampleI.method2())
+    fun checkDefaultBehavior() {
+        val testProvider = TestEventProvider()
+        val sampleI = AnalyticsWrapper(compose(EventProvider { System.out.println(it) }, testProvider)).create(SampleInterface::class)
+
+        sampleI.method1()
+        assertEquals("SampleInterface", testProvider.lastEvent.category)
+        assertEquals("method1", testProvider.lastEvent.action)
+
+        sampleI.method2()
+        assertEquals("SampleInterface", testProvider.lastEvent.category)
+        assertEquals("method2", testProvider.lastEvent.action)
     }
 
     internal interface SampleInterface {
-        fun method1(): String
-        fun method2(): String
+        fun method1()
+        fun method2()
     }
 }
