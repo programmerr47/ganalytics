@@ -3,9 +3,9 @@ package com.github.programmerr47.ganalytics.core
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class AnalyticsWrapperTest {
+class AnalyticsSingleWrapperTest {
     val testProvider: TestEventProvider = TestEventProvider()
-    val wrapper = AnalyticsWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+    val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
 
     @Test
     fun checkDefaultBehavior() {

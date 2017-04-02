@@ -6,7 +6,7 @@ import org.junit.Test
 
 class AnalyticsGroupWrapperTest {
     val testProvider: TestEventProvider = TestEventProvider()
-    val wrapper = AnalyticsGroupWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+    val wrapper = AnalyticsGroupWrapper(AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider)))
 
     @Test
     fun checkDefaultBehavior() {
