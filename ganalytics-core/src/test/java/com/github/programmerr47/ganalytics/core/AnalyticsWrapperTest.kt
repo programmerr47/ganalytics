@@ -4,21 +4,37 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class AnalyticsWrapperTest {
+    val testProvider: TestEventProvider = TestEventProvider()
+    val wrapper = AnalyticsWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+
     @Test
     fun checkDefaultBehavior() {
-        val testProvider = TestEventProvider()
-        val sampleI = AnalyticsWrapper(compose(EventProvider { System.out.println(it) }, testProvider)).create(SampleInterface::class)
+        val sampleI = wrapper.create(SampleInterface::class)
 
         sampleI.method1()
-        assertEquals("SampleInterface", testProvider.lastEvent.category)
-        assertEquals("method1", testProvider.lastEvent.action)
+        assertEquals(Event("sampleinterface", "method1"), testProvider.lastEvent)
 
         sampleI.method2()
-        assertEquals("SampleInterface", testProvider.lastEvent.category)
-        assertEquals("method2", testProvider.lastEvent.action)
+        assertEquals(Event("sampleinterface", "method2"), testProvider.lastEvent)
+    }
+
+    @Test
+    fun checkCuttingOffAnalyticsPrefix() {
+        val analyticsI = wrapper.create(AnalyticsInterface::class)
+
+        analyticsI.method1()
+        assertEquals(Event("interface", "method1"), testProvider.lastEvent)
+
+        analyticsI.method2()
+        assertEquals(Event("interface", "method2"), testProvider.lastEvent)
     }
 
     internal interface SampleInterface {
+        fun method1()
+        fun method2()
+    }
+
+    internal interface AnalyticsInterface {
         fun method1()
         fun method2()
     }

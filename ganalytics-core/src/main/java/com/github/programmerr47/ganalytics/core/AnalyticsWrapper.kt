@@ -10,7 +10,8 @@ class AnalyticsWrapper(val eventProvider: EventProvider) {
     fun <T> create(clazz: Class<T>): T {
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { proxy, method, args ->
             System.out.println("Method " + method.name + " invoked")
-            val event = Event(clazz.simpleName, method.name)
+            val category = clazz.simpleName.toLowerCase().removePrefix("analytics")
+            val event = Event(category, method.name)
             eventProvider.provide(event)
         } as T
     }
