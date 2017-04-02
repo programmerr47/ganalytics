@@ -28,14 +28,4 @@ class AnalyticsWrapperTest {
         analyticsI.method2()
         assertEquals(Event("interface", "method2"), testProvider.lastEvent)
     }
-
-    internal interface SampleInterface {
-        fun method1()
-        fun method2()
-    }
-
-    internal interface AnalyticsInterface {
-        fun method1()
-        fun method2()
-    }
 }
