@@ -1,32 +1,23 @@
 package com.github.programmerr47.ganalytics.core
 
-import org.junit.Assert
 import org.junit.Test
 
-
-class AnalyticsGroupWrapperTest {
-    val testProvider: TestEventProvider = TestEventProvider()
-    val wrapper = AnalyticsGroupWrapper(AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider)))
+class AnalyticsGroupWrapperTest : AnalyticsWrapperTest {
+    override val testProvider: TestEventProvider = TestEventProvider()
+    override val wrapper = AnalyticsGroupWrapper(AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider)))
 
     @Test
     fun checkDefaultBehavior() {
-        val sampleGI = wrapper.create(SampleGroupInterface::class)
-
-        val sampleI = sampleGI.sampleInterface()
-
-        sampleI.method1()
-        Assert.assertEquals(Event("sampleinterface", "method1"), testProvider.lastEvent)
-
-        sampleI.method2()
-        Assert.assertEquals(Event("sampleinterface", "method2"), testProvider.lastEvent)
-
-        val analyticsI = sampleGI.analyticsInterface()
-
-        analyticsI.method1()
-        Assert.assertEquals(Event("interface", "method1"), testProvider.lastEvent)
-
-        analyticsI.method2()
-        Assert.assertEquals(Event("interface", "method2"), testProvider.lastEvent)
+        run(SampleGroupInterface::class) {
+            with(sampleInterface()) {
+                assertEquals(Event("sampleinterface", "method1")) { method1() }
+                assertEquals(Event("sampleinterface", "method2")) { method2() }
+            }
+            with(analyticsInterface()) {
+                assertEquals(Event("interface", "method1")) { method1() }
+                assertEquals(Event("interface", "method2")) { method2() }
+            }
+        }
     }
 
     internal interface SampleGroupInterface {

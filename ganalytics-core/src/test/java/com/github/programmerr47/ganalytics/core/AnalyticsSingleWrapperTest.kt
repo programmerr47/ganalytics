@@ -1,31 +1,24 @@
 package com.github.programmerr47.ganalytics.core
 
-import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class AnalyticsSingleWrapperTest {
-    val testProvider: TestEventProvider = TestEventProvider()
-    val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+class AnalyticsSingleWrapperTest : AnalyticsWrapperTest {
+    override val testProvider: TestEventProvider = TestEventProvider()
+    override val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
 
     @Test
     fun checkDefaultBehavior() {
-        val sampleI = wrapper.create(SampleInterface::class)
-
-        sampleI.method1()
-        assertEquals(Event("sampleinterface", "method1"), testProvider.lastEvent)
-
-        sampleI.method2()
-        assertEquals(Event("sampleinterface", "method2"), testProvider.lastEvent)
+        run(SampleInterface::class) {
+            assertEquals(Event("sampleinterface", "method1")) { method1() }
+            assertEquals(Event("sampleinterface", "method2")) { method2() }
+        }
     }
 
     @Test
     fun checkCuttingOffAnalyticsPrefix() {
-        val analyticsI = wrapper.create(AnalyticsInterface::class)
-
-        analyticsI.method1()
-        assertEquals(Event("interface", "method1"), testProvider.lastEvent)
-
-        analyticsI.method2()
-        assertEquals(Event("interface", "method2"), testProvider.lastEvent)
+        run(AnalyticsInterface::class) {
+            assertEquals(Event("interface", "method1")) { method1() }
+            assertEquals(Event("interface", "method2")) { method2() }
+        }
     }
 }
