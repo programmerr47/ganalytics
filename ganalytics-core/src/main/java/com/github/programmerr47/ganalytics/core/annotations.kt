@@ -3,4 +3,4 @@ package com.github.programmerr47.ganalytics.core
 import kotlin.annotation.AnnotationTarget.*
 
 @Target(CLASS, FUNCTION)
-annotation class HasPrefix
+annotation class HasPrefix(val name: String = "")

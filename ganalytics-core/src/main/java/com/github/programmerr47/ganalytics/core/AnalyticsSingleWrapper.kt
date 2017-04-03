@@ -16,12 +16,18 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     }
 
     fun applyPrefix(clazz: Class<out Any>, method: Method, inputClassName: String, inputName: String): String {
-        val hasPrefix = clazz.getAnnotation(HasPrefix::class.java)
-        if (hasPrefix != null) {
-            return inputClassName + inputName
+        val methodPrefix = method.getAnnotation(HasPrefix::class.java)
+        return if (methodPrefix != null) {
+            val prefix = if (methodPrefix.name.isEmpty()) inputClassName else methodPrefix.name
+            prefix + inputName
         } else {
-            val hasMethodPrefix = method.getAnnotation(HasPrefix::class.java)
-            return if (hasMethodPrefix != null) inputClassName + inputName else inputName
+            val classPrefix = clazz.getAnnotation(HasPrefix::class.java)
+            return if (classPrefix != null) {
+                val prefix = if (classPrefix.name.isEmpty()) inputClassName else classPrefix.name
+                prefix + inputName
+            } else {
+                inputName
+            }
         }
     }
 }

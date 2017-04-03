@@ -50,4 +50,40 @@ class AnalyticsSingleWrapperTest {
         interfaceWithPrefixes.method2()
         assertEquals(Event("analyticinterfacewithprefix", "analyticinterfacewithprefixmethod2"), testProvider.lastEvent)
     }
+
+    @Test
+    fun checkSpecificNamePrefixOnWholeInterface() {
+        val interfaceWithPrefixes = wrapper.create(SpecificNamePrefixInterface::class)
+
+        interfaceWithPrefixes.method1()
+        assertEquals(Event("specificnameprefixinterface", "prefixmethod1"), testProvider.lastEvent)
+
+        interfaceWithPrefixes.method2()
+        assertEquals(Event("specificnameprefixinterface", "prefixmethod2"), testProvider.lastEvent)
+    }
+
+    @Test
+    fun checkSpecificNamePrefixOnSingleMethod() {
+        val interfaceWithPrefixes = wrapper.create(InterfaceWithSpecificNamePrefixOnMethod::class)
+
+        interfaceWithPrefixes.method1()
+        assertEquals(Event("interfacewithspecificnameprefixonmethod", "prefixmethod1"), testProvider.lastEvent)
+
+        interfaceWithPrefixes.method2()
+        assertEquals(Event("interfacewithspecificnameprefixonmethod", "method2"), testProvider.lastEvent)
+    }
+
+    @Test
+    fun checkComplexPrefixNamedInterface() {
+        val interfaceWithPrefixes = wrapper.create(ComplexNamedPrefixesInterface::class)
+
+        interfaceWithPrefixes.method1()
+        assertEquals(Event("complexnamedprefixesinterface", "complexnamedprefixesinterfacemethod1"), testProvider.lastEvent)
+
+        interfaceWithPrefixes.method2()
+        assertEquals(Event("complexnamedprefixesinterface", "interfacemethod2"), testProvider.lastEvent)
+
+        interfaceWithPrefixes.method3()
+        assertEquals(Event("complexnamedprefixesinterface", "methodmethod3"), testProvider.lastEvent)
+    }
 }
