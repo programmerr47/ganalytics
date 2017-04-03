@@ -38,3 +38,10 @@ interface ComplexNamedPrefixesInterface {
     fun method2()
     @HasPrefix("method") fun method3()
 }
+
+@HasPrefix(splitter = "_-_")
+interface SplitterInterface {
+    @HasPrefix fun method1()
+    fun method2()
+    @HasPrefix(splitter = "::") fun method3()
+}

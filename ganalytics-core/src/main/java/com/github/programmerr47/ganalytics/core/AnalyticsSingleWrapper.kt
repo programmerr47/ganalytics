@@ -20,10 +20,10 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     }
 
     private fun applyPrefix(input: String, default: String, hasPrefix: HasPrefix?): String {
-        return if (hasPrefix == null) input else applyPrefix(input, default, hasPrefix.name)
+        return if (hasPrefix == null) input else applyPrefix(input, default, hasPrefix.name, hasPrefix.splitter)
     }
 
-    private fun applyPrefix(input: String, default: String, prefix: String): String {
-        return (if (prefix.isEmpty()) default else prefix) + input
+    private fun applyPrefix(input: String, default: String, prefix: String, splitter: String): String {
+        return (if (prefix.isEmpty()) default else prefix) + splitter + input
     }
 }

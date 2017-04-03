@@ -64,4 +64,18 @@ class HasPrefixTest {
         interfaceWithPrefixes.method3()
         Assert.assertEquals(Event("complexnamedprefixesinterface", "methodmethod3"), testProvider.lastEvent)
     }
+
+    @Test
+    fun checkComplexPrefixWithSplitterInterface() {
+        val splitterInterface = wrapper.create(SplitterInterface::class)
+
+        splitterInterface.method1()
+        Assert.assertEquals(Event("splitterinterface", "splitterinterfacemethod1"), testProvider.lastEvent)
+
+        splitterInterface.method2()
+        Assert.assertEquals(Event("splitterinterface", "splitterinterface_-_method2"), testProvider.lastEvent)
+
+        splitterInterface.method3()
+        Assert.assertEquals(Event("splitterinterface", "splitterinterface::method3"), testProvider.lastEvent)
+    }
 }
