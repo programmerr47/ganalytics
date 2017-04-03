@@ -15,3 +15,8 @@ interface AnalyticsHasPrefixInterface {
     fun method1()
     fun method2()
 }
+
+interface AnalyticInterfaceWithPrefix {
+    fun method1()
+    @HasPrefix fun method2()
+}

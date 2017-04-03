@@ -20,7 +20,8 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
         if (hasPrefix != null) {
             return inputClassName + inputName
         } else {
-            return inputName
+            val hasMethodPrefix = method.getAnnotation(HasPrefix::class.java)
+            return if (hasMethodPrefix != null) inputClassName + inputName else inputName
         }
     }
 }

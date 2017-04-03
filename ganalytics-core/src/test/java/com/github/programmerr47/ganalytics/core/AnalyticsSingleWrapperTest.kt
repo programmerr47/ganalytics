@@ -39,4 +39,15 @@ class AnalyticsSingleWrapperTest {
         prefixInterface.method2()
         assertEquals(Event("hasprefixinterface", "hasprefixinterfacemethod2"), testProvider.lastEvent)
     }
+
+    @Test
+    fun checkPrefixOnSingleMethod() {
+        val interfaceWithPrefixes = wrapper.create(AnalyticInterfaceWithPrefix::class)
+
+        interfaceWithPrefixes.method1()
+        assertEquals(Event("analyticinterfacewithprefix", "method1"), testProvider.lastEvent)
+
+        interfaceWithPrefixes.method2()
+        assertEquals(Event("analyticinterfacewithprefix", "analyticinterfacewithprefixmethod2"), testProvider.lastEvent)
+    }
 }
