@@ -28,4 +28,15 @@ class AnalyticsSingleWrapperTest {
         analyticsI.method2()
         assertEquals(Event("interface", "method2"), testProvider.lastEvent)
     }
+
+    @Test
+    fun checkPrefixOnWholeInterface() {
+        val prefixInterface = wrapper.create(AnalyticsHasPrefixInterface::class)
+
+        prefixInterface.method1()
+        assertEquals(Event("hasprefixinterface", "hasprefixinterfacemethod1"), testProvider.lastEvent)
+
+        prefixInterface.method2()
+        assertEquals(Event("hasprefixinterface", "hasprefixinterfacemethod2"), testProvider.lastEvent)
+    }
 }

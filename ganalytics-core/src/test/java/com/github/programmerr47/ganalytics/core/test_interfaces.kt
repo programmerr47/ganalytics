@@ -9,3 +9,9 @@ interface AnalyticsInterface {
     fun method1()
     fun method2()
 }
+
+@HasPrefix
+interface AnalyticsHasPrefixInterface {
+    fun method1()
+    fun method2()
+}
