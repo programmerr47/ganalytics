@@ -45,3 +45,22 @@ interface SplitterInterface {
     fun method2()
     @HasPrefix(splitter = "::") fun method3()
 }
+
+@NoPrefix
+interface NoPrefixDefaultInterface {
+    @NoPrefix fun method1()
+    fun method2()
+}
+
+@HasPrefix(splitter = ".")
+interface AnalyticsDisablingClassPrefixInterface {
+    fun method1()
+    @NoPrefix fun method2()
+}
+
+@NoPrefix
+@HasPrefix("dummy")
+interface DummyPrefixesInterface {
+    fun method1()
+    fun method2()
+}
