@@ -7,3 +7,6 @@ annotation class HasPrefix(val name: String = "", val splitter: String = "")
 
 @Target(CLASS, FUNCTION)
 annotation class NoPrefix
+
+@Target(CLASS)
+annotation class Category(val name: String = "")

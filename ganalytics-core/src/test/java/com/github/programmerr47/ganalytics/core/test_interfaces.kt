@@ -46,3 +46,12 @@ interface AnalyticsDisablingClassPrefixInterface : SampleInterface {
 @NoPrefix
 @HasPrefix("dummy")
 interface DummyPrefixesInterface : SampleInterface
+
+@Category
+interface DummyCategoryInterface : SampleInterface
+
+@Category("category")
+interface AnalyticsSpecificCategoryInterface : SampleInterface
+
+@Category("analyticscategory")
+interface SpecificCategoryWithAnalyticsPrefixInterface : SampleInterface

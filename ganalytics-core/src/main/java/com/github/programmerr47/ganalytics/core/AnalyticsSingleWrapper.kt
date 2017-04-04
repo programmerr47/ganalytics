@@ -9,7 +9,7 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     override fun <T : Any> create(clazz: Class<T>): T {
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { proxy, method, args ->
             System.out.println("Method " + method.name + " invoked")
-            val category = clazz.simpleName.toLowerCase().removePrefix("analytics")
+            val category = applyCategory(clazz, clazz.simpleName.toLowerCase().removePrefix("analytics"))
             val action = if (getAnnotation(NoPrefix::class, method, clazz) != null) {
                 method.name
             } else {
@@ -18,6 +18,13 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
             val event = Event(category, action)
             eventProvider.provide(event)
         } as T
+    }
+
+    private fun applyCategory(element: AnnotatedElement, default: String) =
+            applyCategory(element.getAnnotation(Category::class.java), default)
+
+    private fun applyCategory(category: Category?, default: String): String {
+        return if (category == null) default else apply(category.name, default)
     }
 
     private fun applyPrefix(input: String, default: String, vararg elements: AnnotatedElement): String {
@@ -29,7 +36,11 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     }
 
     private fun applyPrefix(input: String, default: String, prefix: String, splitter: String): String {
-        return (if (prefix.isEmpty()) default else prefix) + splitter + input
+        return (apply(prefix, default)) + splitter + input
+    }
+
+    private fun apply(target: String, default: String): String {
+        return if (target.isEmpty()) default else target
     }
 
     private fun <T : Annotation> getAnnotation(clazz: KClass<T>, vararg elements: AnnotatedElement): T? {
