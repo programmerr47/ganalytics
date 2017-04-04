@@ -10,10 +10,11 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { proxy, method, args ->
             System.out.println("Method " + method.name + " invoked")
             val category = applyCategory(clazz, clazz.simpleName.toLowerCase().removePrefix("analytics"))
+            val defaultAction = applyAction(method, method.name)
             val action = if (getAnnotation(NoPrefix::class, method, clazz) != null) {
-                method.name
+                defaultAction
             } else {
-                applyPrefix(method.name, category, method, clazz)
+                applyPrefix(defaultAction, category, method, clazz)
             }
             val event = Event(category, action)
             eventProvider.provide(event)
@@ -25,6 +26,14 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
 
     private fun applyCategory(category: Category?, default: String): String {
         return if (category == null) default else apply(category.name, default)
+    }
+
+    private fun applyAction(element: AnnotatedElement, default: String): String {
+        return applyAction(element.getAnnotation(Action::class.java), default)
+    }
+
+    private fun applyAction(action: Action?, default: String): String {
+        return if (action == null) default else apply(action.name, default)
     }
 
     private fun applyPrefix(input: String, default: String, vararg elements: AnnotatedElement): String {

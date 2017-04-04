@@ -10,3 +10,6 @@ annotation class NoPrefix
 
 @Target(CLASS)
 annotation class Category(val name: String = "")
+
+@Target(FUNCTION)
+annotation class Action(val name: String = "")

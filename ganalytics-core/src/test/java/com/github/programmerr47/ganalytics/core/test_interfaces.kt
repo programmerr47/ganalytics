@@ -55,3 +55,15 @@ interface AnalyticsSpecificCategoryInterface : SampleInterface
 
 @Category("analyticscategory")
 interface SpecificCategoryWithAnalyticsPrefixInterface : SampleInterface
+
+interface DummyActionInterface : SampleInterface {
+    @Action override fun method1()
+}
+
+interface SpecificActionInterface : SampleInterface {
+    @Action("function1") override fun method1()
+}
+
+interface SpecificActionWithHasPrefixInterface : SampleInterface {
+    @HasPrefix("specific", splitter = "_") @Action("function1") override fun method1()
+}
