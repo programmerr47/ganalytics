@@ -18,7 +18,11 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
                 applyPrefix(defaultAction, category, method, clazz)
             }
 
-            val label = (args.firstOrNull() ?: "").toString()
+            if (method.parameterCount > 2) {
+                throw IllegalArgumentException("Method ${method.name} have ${method.parameterCount} parameter(s). You can have up to 2 parameters in methods.")
+            }
+
+            val label = (args?.firstOrNull() ?: "").toString()
 
             val event = Event(category, action, label)
             eventProvider.provide(event)

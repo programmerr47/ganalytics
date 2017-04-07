@@ -17,4 +17,12 @@ class LabelDefaultsTest : AnalyticsWrapperTest {
             assertEquals(Event("singleparametermethodinterface", "dummyEnumClassMethod", "TWO")) { dummyEnumClassMethod(DummyEnum.TWO) }
         }
     }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun throwErrorInMoreThanTwoParameterMethod() {
+        run(MoreTwoParameterMethodInterface::class) {
+            assertEquals(Event("moretwoparametermethodinterface", "method1")) { method1() }
+            method2("1", 2, 3L)
+        }
+    }
 }

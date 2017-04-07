@@ -75,3 +75,8 @@ interface SingleParameterMethodInterface {
     fun dummyDataClassMethod(param: DummyDataClass)
     fun dummyEnumClassMethod(param: DummyEnum)
 }
+
+interface MoreTwoParameterMethodInterface {
+    fun method1()
+    fun method2(param1: String, param2: Int, param3: Long)
+}
