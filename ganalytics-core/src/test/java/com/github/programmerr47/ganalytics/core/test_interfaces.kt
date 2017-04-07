@@ -67,3 +67,11 @@ interface SpecificActionInterface : SampleInterface {
 interface SpecificActionWithHasPrefixInterface : SampleInterface {
     @HasPrefix("specific", splitter = "_") @Action("function1") override fun method1()
 }
+
+interface SingleParameterMethodInterface {
+    fun intMethod(param: Int)
+    fun strMethod(param: String)
+    fun dummyClassMethod(param: DummyClass)
+    fun dummyDataClassMethod(param: DummyDataClass)
+    fun dummyEnumClassMethod(param: DummyEnum)
+}

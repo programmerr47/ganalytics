@@ -30,4 +30,16 @@ class NoPrefixTest : AnalyticsWrapperTest {
             assertEquals(Event("dummyprefixesinterface", "method2")) { method2() }
         }
     }
+
+    @Test
+    fun test() {
+        run(S::class) {
+            f("", 5)
+            val t = 5
+        }
+    }
+
+    interface S {
+        fun f(par1: String, paraparam: Int)
+    }
 }

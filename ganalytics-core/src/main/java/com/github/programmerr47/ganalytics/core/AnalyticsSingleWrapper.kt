@@ -10,13 +10,17 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { proxy, method, args ->
             System.out.println("Method " + method.name + " invoked")
             val category = applyCategory(clazz, clazz.simpleName.toLowerCase().removePrefix("analytics"))
+
             val defaultAction = applyAction(method, method.name)
             val action = if (getAnnotation(NoPrefix::class, method, clazz) != null) {
                 defaultAction
             } else {
                 applyPrefix(defaultAction, category, method, clazz)
             }
-            val event = Event(category, action)
+
+            val label = (args.firstOrNull() ?: "").toString()
+
+            val event = Event(category, action, label)
             eventProvider.provide(event)
         } as T
     }
@@ -25,7 +29,7 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
             applyCategory(element.getAnnotation(Category::class.java), default)
 
     private fun applyCategory(category: Category?, default: String): String {
-        return if (category == null) default else apply(category.name, default)
+        return category?.name?.takeNotEmpty() ?: default
     }
 
     private fun applyAction(element: AnnotatedElement, default: String): String {
@@ -33,7 +37,7 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     }
 
     private fun applyAction(action: Action?, default: String): String {
-        return if (action == null) default else apply(action.name, default)
+        return action?.name?.takeNotEmpty() ?: default
     }
 
     private fun applyPrefix(input: String, default: String, vararg elements: AnnotatedElement): String {
@@ -45,12 +49,12 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     }
 
     private fun applyPrefix(input: String, default: String, prefix: String, splitter: String): String {
-        return (apply(prefix, default)) + splitter + input
+        return (prefix.getOr(default)) + splitter + input
     }
 
-    private fun apply(target: String, default: String): String {
-        return if (target.isEmpty()) default else target
-    }
+    private fun String.getOr(default: String) = takeNotEmpty() ?: default
+
+    private fun String.takeNotEmpty() = takeUnless(String::isEmpty)
 
     private fun <T : Annotation> getAnnotation(clazz: KClass<T>, vararg elements: AnnotatedElement): T? {
         return elements.map { it.getAnnotation(clazz.java) }.firstOrNull { it != null }
