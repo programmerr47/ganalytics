@@ -37,4 +37,11 @@ class LabelDefaultsTest : AnalyticsWrapperTest {
             assertEquals(Event("interface", "strNumberMethod", "1", 33)) { strNumberMethod("1", 33.9f) }
         }
     }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun checkTwoNoNumberParametersMethod() {
+        run(TwoParameterMethodNoNumberInterface::class) {
+            assertEquals(Event("we will not", "reach", "this")) { noNumberMethod(DummyEnum.THREE, "I Promise!") }
+        }
+    }
 }

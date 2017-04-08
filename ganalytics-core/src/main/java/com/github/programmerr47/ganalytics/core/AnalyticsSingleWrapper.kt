@@ -66,18 +66,18 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     private fun manageLabelValueArgs(method: Method, args: Array<Any>?) = when (args?.size) {
         in arrayOf(0, null) -> Pair(null, null)
         1 -> findOrNull(args, String::class.java).to(null)
-        2 -> manageTwoArgs(args)
+        2 -> try { manageTwoArgs(args) } catch (e: NoSuchElementException) { throw IllegalArgumentException("For methods with 2 parameters one of them have to be Number", e) }
         else -> throw IllegalArgumentException("Method ${method.name} have ${method.parameterCount} parameter(s). You can have up to 2 parameters in methods.")
     }
 
     private fun manageTwoArgs(args: Array<Any>): Pair<Any?, Any?> {
-        val valueArg = findNotNull(args, Number::class.java)
+        val valueArg = findStrongNotNull(args, Number::class.java)
         val labelArg = findOrNull(args, String::class.java, arrayOf(valueArg))
         return labelArg.to(valueArg)
     }
 
-    private fun findNotNull(args: Array<Any>, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): Any {
-        return find(args, { first(it) }, clazz, reserved)
+    private fun findStrongNotNull(args: Array<Any>, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): Any {
+        return findStrong(args, { first(it) }, clazz, reserved)
     }
 
     private fun findOrNull(args: Array<Any>, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): Any? {
@@ -86,6 +86,10 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
 
     private inline fun <R> find(args: Array<Any>, action: Array<out Any>.((Any) -> Boolean) -> R, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): R {
         return find(args, action, { clazz.isInstance(it) && !reserved.contains(it) }, { !reserved.contains(it) })
+    }
+
+    private inline fun <R> findStrong(args: Array<Any>, action: Array<out Any>.((Any) -> Boolean) -> R, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): R {
+        return find(args, action, { clazz.isInstance(it) && !reserved.contains(it) })
     }
 
     private inline fun <R> find(args: Array<Any>, action: Array<out Any>.((Any) -> Boolean) -> R, vararg predicate: (Any) -> Boolean): R {

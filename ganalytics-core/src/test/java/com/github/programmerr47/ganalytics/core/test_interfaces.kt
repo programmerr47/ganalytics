@@ -88,3 +88,8 @@ interface TwoParameterMethodStringAndNumberInterface {
     fun strLongMethod(param1: String, param2: Long)
     fun strNumberMethod(param1: String, param2: Number)
 }
+
+@Category("interface")
+interface TwoParameterMethodNoNumberInterface {
+    fun noNumberMethod(param1: DummyEnum, param2: String)
+}
