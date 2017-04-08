@@ -1,6 +1,7 @@
 package com.github.programmerr47.ganalytics.core
 
 import java.lang.reflect.AnnotatedElement
+import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import kotlin.reflect.KClass
 
@@ -18,11 +19,7 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
                 applyPrefix(defaultAction, category, method, clazz)
             }
 
-            if (method.parameterCount > 2) {
-                throw IllegalArgumentException("Method ${method.name} have ${method.parameterCount} parameter(s). You can have up to 2 parameters in methods.")
-            }
-
-            val (labelArg, valueArg) = manageLabelValueArgs(args)
+            val (labelArg, valueArg) = manageLabelValueArgs(method, args)
             val label = (labelArg ?: "").toString()
             val value = ((valueArg ?: 0) as Number).toLong()
 
@@ -66,18 +63,33 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
         return elements.map { it.getAnnotation(clazz.java) }.firstOrNull { it != null }
     }
 
-    private fun manageLabelValueArgs(args: Array<Any>?): Pair<Any?, Any?> {
-        val labelArg = find(args, String::class.java)
-        val valueArg = find(args, Number::class.java, arrayOf(labelArg))
+    private fun manageLabelValueArgs(method: Method, args: Array<Any>?) = when (args?.size) {
+        in arrayOf(0, null) -> Pair(null, null)
+        1 -> findOrNull(args, String::class.java).to(null)
+        2 -> manageTwoArgs(args)
+        else -> throw IllegalArgumentException("Method ${method.name} have ${method.parameterCount} parameter(s). You can have up to 2 parameters in methods.")
+    }
+
+    private fun manageTwoArgs(args: Array<Any>): Pair<Any?, Any?> {
+        val valueArg = findNotNull(args, Number::class.java)
+        val labelArg = findOrNull(args, String::class.java, arrayOf(valueArg))
         return labelArg.to(valueArg)
     }
 
-    private fun find(args: Array<Any>?, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): Any? {
-        return find(args, { clazz.isInstance(it) && !reserved.contains(it) }, { !reserved.contains(it) })
+    private fun findNotNull(args: Array<Any>, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): Any {
+        return find(args, { first(it) }, clazz, reserved)
     }
 
-    private fun find(args: Array<Any>?, vararg predicate: (Any) -> Boolean): Any? {
-        return args?.firstOrNull(findFirstPredicate(args, *predicate) ?: {false})
+    private fun findOrNull(args: Array<Any>, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): Any? {
+        return find(args, { firstOrNull(it) }, clazz, reserved)
+    }
+
+    private inline fun <R> find(args: Array<Any>, action: Array<out Any>.((Any) -> Boolean) -> R, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): R {
+        return find(args, action, { clazz.isInstance(it) && !reserved.contains(it) }, { !reserved.contains(it) })
+    }
+
+    private inline fun <R> find(args: Array<Any>, action: Array<out Any>.((Any) -> Boolean) -> R, vararg predicate: (Any) -> Boolean): R {
+        return args.action(findFirstPredicate(args, *predicate) ?: {false})
     }
 
     private fun findFirstPredicate(args: Array<Any>, vararg predicate: (Any) -> Boolean): ((Any) -> Boolean)? {

@@ -6,11 +6,11 @@ import kotlin.reflect.KClass
 interface AnalyticsWrapperTest {
     val testProvider: TestEventProvider
     val wrapper: AnalyticsWrapper
+}
 
-    fun <T : Any> run(clazz: KClass<T>, block: T.() -> Unit) = wrapper.create(clazz).run(block)
+inline fun <T : Any> AnalyticsWrapperTest.run(clazz: KClass<T>, block: T.() -> Unit) = wrapper.create(clazz).run(block)
 
-    fun assertEquals(event: Event, interfaceMethod: () -> Unit) {
-        interfaceMethod()
-        Assert.assertEquals(event, testProvider.lastEvent)
-    }
+inline fun AnalyticsWrapperTest.assertEquals(event: Event, interfaceMethod: () -> Unit) {
+    interfaceMethod()
+    Assert.assertEquals(event, testProvider.lastEvent)
 }
