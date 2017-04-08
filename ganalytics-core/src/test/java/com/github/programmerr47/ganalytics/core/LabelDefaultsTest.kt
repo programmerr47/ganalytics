@@ -44,4 +44,13 @@ class LabelDefaultsTest : AnalyticsWrapperTest {
             assertEquals(Event("we will not", "reach", "this")) { noNumberMethod(DummyEnum.THREE, "I Promise!") }
         }
     }
+
+    @Test
+    fun checkTwoParametersOneNumberMethod() {
+        run(TwoParameterMethodOneNumberInterface::class) {
+            assertEquals(Event("interface", "default", "def", 3)) { default("def", 3) }
+            assertEquals(Event("interface", "reversed", "def", 3)) { reversed(3, "def") }
+            assertEquals(Event("interface", "custom", "DummyDataClass(id=3, name=def)", 3)) { custom(DummyDataClass(3, "def"), 3) }
+        }
+    }
 }

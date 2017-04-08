@@ -93,3 +93,10 @@ interface TwoParameterMethodStringAndNumberInterface {
 interface TwoParameterMethodNoNumberInterface {
     fun noNumberMethod(param1: DummyEnum, param2: String)
 }
+
+@Category("interface")
+interface TwoParameterMethodOneNumberInterface {
+    fun default(param1: String, param2: Number)
+    fun reversed(param1: Number, param2: String)
+    fun custom(param1: DummyDataClass, param2: Number)
+}
