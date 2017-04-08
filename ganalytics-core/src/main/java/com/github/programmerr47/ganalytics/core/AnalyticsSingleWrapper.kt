@@ -22,9 +22,11 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
                 throw IllegalArgumentException("Method ${method.name} have ${method.parameterCount} parameter(s). You can have up to 2 parameters in methods.")
             }
 
-            val label = (args?.firstOrNull() ?: "").toString()
+            val (labelArg, valueArg) = manageLabelValueArgs(args)
+            val label = (labelArg ?: "").toString()
+            val value = ((valueArg ?: 0) as Number).toLong()
 
-            val event = Event(category, action, label)
+            val event = Event(category, action, label, value)
             eventProvider.provide(event)
         } as T
     }
@@ -62,5 +64,23 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
 
     private fun <T : Annotation> getAnnotation(clazz: KClass<T>, vararg elements: AnnotatedElement): T? {
         return elements.map { it.getAnnotation(clazz.java) }.firstOrNull { it != null }
+    }
+
+    private fun manageLabelValueArgs(args: Array<Any>?): Pair<Any?, Any?> {
+        val labelArg = find(args, String::class.java)
+        val valueArg = find(args, Number::class.java, arrayOf(labelArg))
+        return labelArg.to(valueArg)
+    }
+
+    private fun find(args: Array<Any>?, clazz: Class<*>, reserved: Array<Any?> = arrayOf()): Any? {
+        return find(args, { clazz.isInstance(it) && !reserved.contains(it) }, { !reserved.contains(it) })
+    }
+
+    private fun find(args: Array<Any>?, vararg predicate: (Any) -> Boolean): Any? {
+        return args?.firstOrNull(findFirstPredicate(args, *predicate) ?: {false})
+    }
+
+    private fun findFirstPredicate(args: Array<Any>, vararg predicate: (Any) -> Boolean): ((Any) -> Boolean)? {
+        return predicate.firstOrNull { args.firstOrNull(it) != null }
     }
 }

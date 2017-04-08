@@ -80,3 +80,11 @@ interface MoreTwoParameterMethodInterface {
     fun method1()
     fun method2(param1: String, param2: Int, param3: Long)
 }
+
+@Category("interface")
+interface TwoParameterMethodStringAndNumberInterface {
+    fun intStrMethod(param1: Int, param2: String)
+    fun strIntMethod(param1: String, param2: Int)
+    fun strLongMethod(param1: String, param2: Long)
+    fun strNumberMethod(param1: String, param2: Number)
+}
