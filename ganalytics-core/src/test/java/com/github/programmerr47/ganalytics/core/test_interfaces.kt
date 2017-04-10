@@ -100,3 +100,25 @@ interface TwoParameterMethodOneNumberInterface {
     fun reversed(param1: Number, param2: String)
     fun custom(param1: DummyDataClass, param2: Number)
 }
+
+@Category("interface")
+interface TwoParameterBothNumberInterface {
+    fun method(param1: Number, param2: Number)
+}
+
+interface SimpleLabelInterface {
+    fun method(@Label param1: String, param2: Number)
+}
+
+interface NumberLabelInterface {
+    fun method1(@Label param1: Number, param2: Number)
+    fun method2(param1: Number, @Label param2: Number)
+}
+
+interface NumberLabelStringNotInterface {
+    fun method(@Label param1: Number, param2: String)
+}
+
+interface TwoLabelsInterface {
+    fun method(@Label param1: Number, @Label param2: Number)
+}

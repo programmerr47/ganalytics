@@ -53,4 +53,11 @@ class LabelDefaultsTest : AnalyticsWrapperTest {
             assertEquals(Event("interface", "custom", "DummyDataClass(id=3, name=def)", 3)) { custom(DummyDataClass(3, "def"), 3) }
         }
     }
+
+    @Test
+    fun checkCheckCorrectChoosingBetweenTwoNumberParametersWithoutLabelAnnotation() {
+        run(TwoParameterBothNumberInterface::class) {
+            assertEquals(Event("interface", "method", "1", 2)) { method(1, 2) }
+        }
+    }
 }

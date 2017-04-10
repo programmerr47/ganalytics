@@ -13,3 +13,6 @@ annotation class Category(val name: String = "")
 
 @Target(FUNCTION)
 annotation class Action(val name: String = "")
+
+@Target(VALUE_PARAMETER)
+annotation class Label
