@@ -20,7 +20,7 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
             }
 
             val (labelArg, valueArg) = manageLabelValueArgs(method, args)
-            val label = (labelArg ?: "").toString()
+            val label = labelArg ?: ""
             val value = (valueArg ?: 0).toLong()
 
             val event = Event(category, action, label, value)
@@ -65,37 +65,52 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
 
     private fun manageLabelValueArgs(method: Method, args: Array<Any>?) = when (args?.size) {
         in arrayOf(0, null) -> Pair(null, null)
-        1 -> Pair(args[0], null)
+        1 -> Pair(convertLabelArg(args[0], method.parameterAnnotations[0]), null)
         2 -> manageTwoArgs(args, method.parameterAnnotations)
         else -> throw IllegalArgumentException("Method ${method.name} have ${method.parameterCount} parameter(s). You can have up to 2 parameters in methods.")
     }
 
-    private fun manageTwoArgs(args: Array<Any>, annotations: Array<Array<Annotation>>): Pair<Any, Number> {
+    private fun manageTwoArgs(args: Array<Any>, annotations: Array<Array<Annotation>>): Pair<String, Number> {
         val firstArg = args[0]
         val secondArg = args[1]
 
+        val secondArgLabelAnnotation = annotations[1].firstOrNull(Label::class)
+        val firstArgLabelAnnotation = annotations[0].firstOrNull(Label::class)
+
         if (secondArg is Number) {
-            if (annotations[1].firstOrNull { it is Label } != null) {
-                if (annotations[0].firstOrNull { it is Label } != null) {
+            if (secondArgLabelAnnotation != null) {
+                if (firstArgLabelAnnotation != null) {
                     throw IllegalArgumentException("Methods with two parameters can have no more than 1 Label annotation")
                 } else {
                     if (firstArg is Number) {
-                        return Pair(secondArg, firstArg)
+                        return Pair(convertLabelArg(secondArg, secondArgLabelAnnotation), firstArg)
                     } else {
                         throw IllegalArgumentException("For methods with 2 parameters one of them have to be Number without Label annotation")
                     }
                 }
             } else {
-                return Pair(firstArg, secondArg)
+                return Pair(convertLabelArg(firstArg, firstArgLabelAnnotation), secondArg)
             }
         } else if (firstArg is Number) {
-            if (annotations[0].firstOrNull { it is Label } != null) {
+            if (firstArgLabelAnnotation != null) {
                 throw IllegalArgumentException("For methods with 2 parameters one of them have to be Number without Label annotation")
             } else {
-                return Pair(secondArg, firstArg)
+                return Pair(convertLabelArg(secondArg, secondArgLabelAnnotation), firstArg)
             }
         } else {
             throw IllegalArgumentException("For methods with 2 parameters one of them have to be Number without Label annotation")
         }
     }
+
+    private fun convertLabelArg(label: Any, annotations: Array<Annotation>) =
+            convertLabelArg(label, annotations.firstOrNull(Label::class))
+
+    private fun convertLabelArg(label: Any, annotation: Label?): String {
+        val converterClass = annotation?.converter
+        val instance = converterClass?.objectInstance ?: converterClass?.java?.newInstance() ?: SimpleLabelConverter
+        return instance.convert(label)
+    }
+
+    private fun <R : Any> Array<*>.firstOrNull(klass: KClass<R>) =
+            filterIsInstance(klass.java).firstOrNull()
 }

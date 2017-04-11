@@ -1,6 +1,7 @@
 package com.github.programmerr47.ganalytics.core
 
 import kotlin.annotation.AnnotationTarget.*
+import kotlin.reflect.KClass
 
 @Target(CLASS, FUNCTION)
 annotation class HasPrefix(val name: String = "", val splitter: String = "")
@@ -15,4 +16,4 @@ annotation class Category(val name: String = "")
 annotation class Action(val name: String = "")
 
 @Target(VALUE_PARAMETER)
-annotation class Label
+annotation class Label(val converter: KClass<out LabelConverter<Any>> = SimpleLabelConverter::class )
