@@ -1,9 +1,15 @@
 package com.github.programmerr47.ganalytics.core
 
-interface LabelConverter<in T> {
-    fun convert(label: T): String
+interface LabelConverter {
+    fun convert(label: Any): String
 }
 
-object SimpleLabelConverter : LabelConverter<Any> {
+object SimpleLabelConverter : LabelConverter {
     override fun convert(label: Any) = label.toString()
+}
+
+interface TypedLabelConverter<T> : LabelConverter {
+    override fun convert(label: Any) = convertTyped(label as T)
+
+    fun convertTyped(label: T): String
 }

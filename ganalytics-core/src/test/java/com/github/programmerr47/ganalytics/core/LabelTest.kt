@@ -31,4 +31,28 @@ class LabelTest : AnalyticsWrapperTest {
     fun checkErrorWhenUseTwoLabelArguments() {
         run(TwoLabelsInterface::class) { method(1, 2) }
     }
+
+    @Test
+    fun checkArgumentWithCustomConverter() {
+        run(ConverterInterface::class) {
+            assertEquals(Event("converterinterface", "method", "5.hello")) { method(DummyDataClass(5, "hello")) }
+        }
+    }
+
+    @Test(expected = ClassCastException::class)
+    fun checkArgumentWithCustomConverterBroken() {
+        run(ConverterBrokenInterface::class) { method(DummyClass(5, "hello")) }
+    }
+
+    interface ConverterInterface {
+        fun method(@Label(DummyDataClassConverter::class) param: DummyDataClass)
+    }
+
+    interface ConverterBrokenInterface {
+        fun method(@Label(DummyDataClassConverter::class) param: DummyClass)
+    }
+
+    object DummyDataClassConverter : TypedLabelConverter<DummyDataClass> {
+        override fun convertTyped(label: DummyDataClass) = label.run { "$id.$name" }
+    }
 }
