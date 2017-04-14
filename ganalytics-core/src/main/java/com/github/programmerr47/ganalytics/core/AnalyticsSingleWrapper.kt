@@ -71,34 +71,24 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     }
 
     private fun manageTwoArgs(args: Array<Any>, annotations: Array<Array<Annotation>>): Pair<String, Number> {
-        val firstArg = args[0]
-        val secondArg = args[1]
+        return manageTwoArgs(args[0], annotations[0].label(), args[1], annotations[1].label())
+    }
 
-        val secondArgLabelAnnotation = annotations[1].firstOrNull(Label::class)
-        val firstArgLabelAnnotation = annotations[0].firstOrNull(Label::class)
+    private fun Array<Annotation>.label() = firstOrNull(Label::class)
 
-        if (secondArg is Number) {
-            if (secondArgLabelAnnotation != null) {
-                if (firstArgLabelAnnotation != null) {
-                    throw IllegalArgumentException("Methods with two parameters can have no more than 1 Label annotation")
-                } else {
-                    if (firstArg is Number) {
-                        return Pair(convertLabelArg(secondArg, secondArgLabelAnnotation), firstArg)
-                    } else {
-                        throw IllegalArgumentException("For methods with 2 parameters one of them have to be Number without Label annotation")
-                    }
-                }
-            } else {
-                return Pair(convertLabelArg(firstArg, firstArgLabelAnnotation), secondArg)
-            }
-        } else if (firstArg is Number) {
-            if (firstArgLabelAnnotation != null) {
+    private fun manageTwoArgs(arg1: Any, argA1: Label?, arg2: Any, argA2: Label?): Pair<String, Number> {
+        return manageArgAsValue(arg2, argA2, arg1, argA1) {
+            manageArgAsValue(arg1, argA1, arg2, argA2) {
                 throw IllegalArgumentException("For methods with 2 parameters one of them have to be Number without Label annotation")
-            } else {
-                return Pair(convertLabelArg(secondArg, secondArgLabelAnnotation), firstArg)
             }
+        }
+    }
+
+    private inline fun manageArgAsValue(vArg: Any, vArgA: Label?, lArg: Any, lArgA: Label?, defaultAction: () -> Pair<String, Number>): Pair<String, Number> {
+        return if (vArg is Number && vArgA == null) {
+            Pair(convertLabelArg(lArg, lArgA), vArg)
         } else {
-            throw IllegalArgumentException("For methods with 2 parameters one of them have to be Number without Label annotation")
+            defaultAction()
         }
     }
 
@@ -111,10 +101,8 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     }
 
     private fun retrieveConverter(klass: KClass<out LabelConverter>?): LabelConverter {
-        return klass?.instantiate() ?: SimpleLabelConverter
+        return klass?.run { objectInstance ?: java.newInstance() } ?: SimpleLabelConverter
     }
-
-    private fun KClass<out LabelConverter>.instantiate() = objectInstance ?: java.newInstance()
 
     private fun <R : Any> Array<*>.firstOrNull(klass: KClass<R>): R? {
         return filterIsInstance(klass.java).firstOrNull()
