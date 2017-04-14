@@ -102,15 +102,21 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
         }
     }
 
-    private fun convertLabelArg(label: Any, annotations: Array<Annotation>) =
-            convertLabelArg(label, annotations.firstOrNull(Label::class))
-
-    private fun convertLabelArg(label: Any, annotation: Label?): String {
-        val converterClass = annotation?.converter
-        val instance = converterClass?.objectInstance ?: converterClass?.java?.newInstance() ?: SimpleLabelConverter
-        return instance.convert(label)
+    private fun convertLabelArg(label: Any, annotations: Array<Annotation>): String {
+        return convertLabelArg(label, annotations.firstOrNull(Label::class))
     }
 
-    private fun <R : Any> Array<*>.firstOrNull(klass: KClass<R>) =
-            filterIsInstance(klass.java).firstOrNull()
+    private fun convertLabelArg(label: Any, annotation: Label?): String {
+        return retrieveConverter(annotation?.converter).convert(label)
+    }
+
+    private fun retrieveConverter(klass: KClass<out LabelConverter>?): LabelConverter {
+        return klass?.instantiate() ?: SimpleLabelConverter
+    }
+
+    private fun KClass<out LabelConverter>.instantiate() = objectInstance ?: java.newInstance()
+
+    private fun <R : Any> Array<*>.firstOrNull(klass: KClass<R>): R? {
+        return filterIsInstance(klass.java).firstOrNull()
+    }
 }
