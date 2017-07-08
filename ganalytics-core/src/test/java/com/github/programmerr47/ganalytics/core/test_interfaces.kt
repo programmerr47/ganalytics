@@ -122,3 +122,7 @@ interface NumberLabelStringNotInterface {
 interface TwoLabelsInterface {
     fun method(@Label param1: Number, @Label param2: Number)
 }
+
+interface Bad___Named_Interface {}
+
+interface `kotlin style super 4357 __ bad named interface` {}

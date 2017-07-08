@@ -1,5 +1,6 @@
 package com.github.programmerr47.ganalytics.core
 
+import com.github.programmerr47.ganalytics.core.NamingConventions.LOWER_CASE
 import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
@@ -8,11 +9,11 @@ import kotlin.reflect.KClass
 class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : AnalyticsWrapper {
     @Suppress("unchecked_cast")
     override fun <T : Any> create(clazz: Class<T>): T {
-        return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { proxy, method, args ->
+        return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { _, method, args ->
             System.out.println("Method " + method.name + " invoked")
             val category = applyCategory(clazz, clazz.simpleName.toLowerCase().removePrefix("analytics"))
 
-            val defaultAction = applyAction(method, method.name)
+            val defaultAction = applyAction(method, method.name.toLowerCase())
             val action = if (getAnnotation(NoPrefix::class, method, clazz) != null) {
                 defaultAction
             } else {
@@ -26,6 +27,10 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
             val event = Event(category, action, label, value)
             eventProvider.provide(event)
         } as T
+    }
+
+    private fun applyConvention(convention: NamingConvention?, name: String): String {
+        return (convention ?: LOWER_CASE).convert(name.decapitalize())
     }
 
     private fun applyCategory(element: AnnotatedElement, default: String) =

@@ -11,11 +11,11 @@ class LabelDefaultsTest : AnalyticsWrapperTest {
     fun checkLabelInSingleParameterMethods() {
         val dummyClass = DummyClass(101, "Holy world!")
         run(SingleParameterMethodInterface::class) {
-            assertEquals(Event("singleparametermethodinterface", "intMethod", "101")) { intMethod(101) }
-            assertEquals(Event("singleparametermethodinterface", "strMethod", "Holy world!")) { strMethod("Holy world!") }
-            assertEquals(Event("singleparametermethodinterface", "dummyClassMethod", dummyClass.toString())) { dummyClassMethod(dummyClass) }
-            assertEquals(Event("singleparametermethodinterface", "dummyDataClassMethod", "DummyDataClass(id=101, name=Holy world!)")) { dummyDataClassMethod(DummyDataClass(101, "Holy world!")) }
-            assertEquals(Event("singleparametermethodinterface", "dummyEnumClassMethod", "TWO")) { dummyEnumClassMethod(DummyEnum.TWO) }
+            assertEquals(Event("singleparametermethodinterface", "intmethod", "101")) { intMethod(101) }
+            assertEquals(Event("singleparametermethodinterface", "strmethod", "Holy world!")) { strMethod("Holy world!") }
+            assertEquals(Event("singleparametermethodinterface", "dummyclassmethod", dummyClass.toString())) { dummyClassMethod(dummyClass) }
+            assertEquals(Event("singleparametermethodinterface", "dummydataclassmethod", "DummyDataClass(id=101, name=Holy world!)")) { dummyDataClassMethod(DummyDataClass(101, "Holy world!")) }
+            assertEquals(Event("singleparametermethodinterface", "dummyenumclassmethod", "TWO")) { dummyEnumClassMethod(DummyEnum.TWO) }
         }
     }
 
@@ -30,11 +30,11 @@ class LabelDefaultsTest : AnalyticsWrapperTest {
     @Test
     fun checkLabelAndValueInTwoParamMethod() {
         run(TwoParameterMethodStringAndNumberInterface::class) {
-            assertEquals(Event("interface", "intStrMethod", "2", 1)) { intStrMethod(1, "2") }
-            assertEquals(Event("interface", "strIntMethod", "1", 2)) { strIntMethod("1", 2) }
-            assertEquals(Event("interface", "strLongMethod", "1", 2)) { strLongMethod("1", 2) }
-            assertEquals(Event("interface", "strNumberMethod", "1", 32)) { strNumberMethod("1", BigDecimal(32.3)) }
-            assertEquals(Event("interface", "strNumberMethod", "1", 33)) { strNumberMethod("1", 33.9f) }
+            assertEquals(Event("interface", "intstrmethod", "2", 1)) { intStrMethod(1, "2") }
+            assertEquals(Event("interface", "strintmethod", "1", 2)) { strIntMethod("1", 2) }
+            assertEquals(Event("interface", "strlongmethod", "1", 2)) { strLongMethod("1", 2) }
+            assertEquals(Event("interface", "strnumbermethod", "1", 32)) { strNumberMethod("1", BigDecimal(32.3)) }
+            assertEquals(Event("interface", "strnumbermethod", "1", 33)) { strNumberMethod("1", 33.9f) }
         }
     }
 
