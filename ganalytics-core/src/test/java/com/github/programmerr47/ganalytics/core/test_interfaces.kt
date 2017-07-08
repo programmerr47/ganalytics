@@ -123,6 +123,6 @@ interface TwoLabelsInterface {
     fun method(@Label param1: Number, @Label param2: Number)
 }
 
-interface Bad___Named_Interface {}
+interface bad___Named_interface {}
 
 interface `kotlin style super 4357 __ bad named interface` {}

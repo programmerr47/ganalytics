@@ -21,6 +21,7 @@ class ConventionsTest(
         fun data(): Collection<Array<String>> {
             return listOf(
                     arrayOf("camelCaseName", "Camel_case_name", "camel_case_name", "CamelCaseName", "camelCaseName", "camelcasename"),
+                    arrayOf("CamelCaseName", "Camel_case_name", "camel_case_name", "CamelCaseName", "camelCaseName", "camelcasename"),
                     arrayOf("ABCD", "Abcd", "abcd", "ABCD", "aBCD", "abcd"),
                     arrayOf("snake_case_name", "Snake_case_name", "snake_case_name", "Snake_case_name", "snake_case_name", "snake_case_name"),
                     arrayOf(ConventionsTest::class.java.simpleName, "Conventions_test", "conventions_test", "ConventionsTest", "conventionsTest", "conventionstest"))
@@ -47,7 +48,7 @@ class FixingBadCodeStyleConventionTest {
 
     @Test
     fun checkBadInterfacesAndMethods() {
-        Assert.assertEquals("BadNamedInterface", convention.convert(Bad___Named_Interface::class.simpleName!!))
+        Assert.assertEquals("BadNamedInterface", convention.convert(bad___Named_interface::class.simpleName!!))
         Assert.assertEquals("DasTinHoffmanNamedMethod", convention.convert("dasTinHoffman_Named_Method"))
         Assert.assertEquals("KotlinStyleSuper4357BadNamedInterface", convention.convert(`kotlin style super 4357 __ bad named interface`::class.simpleName!!))
     }

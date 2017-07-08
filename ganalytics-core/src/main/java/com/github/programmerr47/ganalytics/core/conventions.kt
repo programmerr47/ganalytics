@@ -14,10 +14,16 @@ enum class NamingConventions(val converter: (String) -> String) : NamingConventi
     override fun convert(name: String) = converter(name)
 }
 
-internal fun fixingBadCodeStyleConvention() = object : NamingConvention {
+fun fixingBadCodeStyleConvention() = object : NamingConvention {
     override fun convert(name: String) = name
             .split('_', ' ')
             .joinToString(
                     separator = "",
                     transform = String::capitalize)
+}
+
+internal fun NamingConvention.withFirstFixingBadCodeStyle() = let {
+    object : NamingConvention {
+        override fun convert(name: String) = it.convert(fixingBadCodeStyleConvention().convert(name))
+    }
 }

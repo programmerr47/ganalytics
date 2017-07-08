@@ -11,9 +11,10 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
     override fun <T : Any> create(clazz: Class<T>): T {
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { _, method, args ->
             System.out.println("Method " + method.name + " invoked")
-            val category = applyCategory(clazz, clazz.simpleName.toLowerCase().removePrefix("analytics"))
+            val convention = getAnnotation(Convention::class, clazz)?.value ?: LOWER_CASE
+            val category = applyCategory(clazz, applyConvention(convention, clazz.analyticsName))
 
-            val defaultAction = applyAction(method, method.name.toLowerCase())
+            val defaultAction = applyAction(method, applyConvention(convention, method.name))
             val action = if (getAnnotation(NoPrefix::class, method, clazz) != null) {
                 defaultAction
             } else {
@@ -29,9 +30,11 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
         } as T
     }
 
-    private fun applyConvention(convention: NamingConvention?, name: String): String {
-        return (convention ?: LOWER_CASE).convert(name.decapitalize())
-    }
+    private val Class<*>.analyticsName get() = simpleName.decapitalize().removePrefix("analytics").capitalize()
+
+    private fun applyConvention(convention: NamingConvention, name: String) = convention
+            .withFirstFixingBadCodeStyle()
+            .convert(name.decapitalize())
 
     private fun applyCategory(element: AnnotatedElement, default: String) =
             applyCategory(element.getAnnotation(Category::class.java), default)
