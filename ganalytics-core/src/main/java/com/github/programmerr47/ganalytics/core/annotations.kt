@@ -9,7 +9,7 @@ annotation class HasPrefix(val name: String = "", val splitter: String = "")
 @Target(CLASS, FUNCTION)
 annotation class NoPrefix
 
-@Target(CLASS)
+@Target(CLASS, FUNCTION)
 annotation class Category(val name: String = "")
 
 @Target(FUNCTION)
@@ -18,5 +18,5 @@ annotation class Action(val name: String = "")
 @Target(VALUE_PARAMETER)
 annotation class Label(val converter: KClass<out LabelConverter> = SimpleLabelConverter::class )
 
-@Target(CLASS)
+@Target(CLASS, FUNCTION)
 annotation class Convention(val value: NamingConventions = NamingConventions.LOWER_CASE)

@@ -2,12 +2,17 @@ package com.github.programmerr47.ganalytics.core
 
 import java.lang.reflect.Proxy
 
-class AnalyticsGroupWrapper(val singleWrapper: AnalyticsWrapper) : AnalyticsWrapper {
+class AnalyticsGroupWrapper(private val eventProvider: EventProvider) : AnalyticsWrapper {
+
     @Suppress("unchecked_cast")
     override fun <T : Any> create(clazz: Class<T>): T {
-        return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { proxy, method, args ->
-            System.out.println("Method " + method.name + " invoked")
-            singleWrapper.create(method.returnType) as T
+        return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { _, method, _ ->
+            val requiredClazzAnnotations = listOf(HasPrefix::class, NoPrefix::class, Convention::class)
+            val clazzAnnotations = requiredClazzAnnotations.mapNotNull { clazz.getAnnotation(it.java) }
+            val splitter = clazz.getAnnotation(HasPrefix::class.java)?.splitter ?: "FUCK"
+
+            val defAnnotations = AnalyticsDefAnnotations(clazzAnnotations.toTypedArray())
+            AnalyticsSingleWrapper(eventProvider, defAnnotations).create(method.returnType)
         } as T
     }
 }

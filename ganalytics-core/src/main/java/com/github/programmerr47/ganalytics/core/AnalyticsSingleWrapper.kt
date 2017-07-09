@@ -6,19 +6,21 @@ import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import kotlin.reflect.KClass
 
-class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : AnalyticsWrapper {
+class AnalyticsSingleWrapper(
+        private val eventProvider: EventProvider,
+        private val defAnnotations: AnalyticsDefAnnotations = AnalyticsDefAnnotations()) : AnalyticsWrapper {
+
     @Suppress("unchecked_cast")
     override fun <T : Any> create(clazz: Class<T>): T {
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { _, method, args ->
-            System.out.println("Method " + method.name + " invoked")
-            val convention = getAnnotation(Convention::class, clazz)?.value ?: LOWER_CASE
-            val category = applyCategory(clazz, applyConvention(convention, clazz.analyticsName))
+            val convention = getAnnotation(Convention::class, clazz, defAnnotations)?.value ?: LOWER_CASE
+            val category = applyCategory(applyConvention(convention, clazz.analyticsName), clazz, defAnnotations)
 
             val defaultAction = applyAction(method, applyConvention(convention, method.name))
-            val action = if (getAnnotation(NoPrefix::class, method, clazz) != null) {
+            val action = if (getAnnotation(NoPrefix::class, method, clazz, defAnnotations) != null) {
                 defaultAction
             } else {
-                applyPrefix(defaultAction, category, method, clazz)
+                applyPrefix(defaultAction, category, method, clazz, defAnnotations)
             }
 
             val (labelArg, valueArg) = manageLabelValueArgs(method, args)
@@ -36,8 +38,8 @@ class AnalyticsSingleWrapper(private val eventProvider: EventProvider) : Analyti
             .withFirstFixingBadCodeStyle()
             .convert(name.decapitalize())
 
-    private fun applyCategory(element: AnnotatedElement, default: String) =
-            applyCategory(element.getAnnotation(Category::class.java), default)
+    private fun applyCategory(default: String, vararg elements: AnnotatedElement) =
+            applyCategory(getAnnotation(Category::class, *elements), default)
 
     private fun applyCategory(category: Category?, default: String): String {
         return category?.name?.takeNotEmpty() ?: default
