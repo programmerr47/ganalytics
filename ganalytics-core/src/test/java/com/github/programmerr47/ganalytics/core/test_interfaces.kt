@@ -1,5 +1,8 @@
 package com.github.programmerr47.ganalytics.core
 
+import com.github.programmerr47.ganalytics.core.NamingConventions.LOWER_SNAKE_CASE
+import com.github.programmerr47.ganalytics.core.NamingConventions.UPPER_SNAKE_CASE
+
 interface SampleInterface {
     fun method1()
     fun method2()
@@ -126,3 +129,24 @@ interface TwoLabelsInterface {
 interface bad___Named_interface {}
 
 interface `kotlin style super 4357 __ bad named interface` {}
+
+@Convention
+interface AnalyticsConventionInterface {
+    fun simpleMethod()
+}
+
+@Convention(LOWER_SNAKE_CASE)
+interface AnalyticsLibConventionInterface {
+    fun simpleMethod()
+}
+
+@Convention(UPPER_SNAKE_CASE)
+@Category("MySuPerCaT__ego_RY")
+interface ConventionWithCategoryInterface {
+    fun simpleMethod()
+}
+
+@Convention(UPPER_SNAKE_CASE)
+interface ConventionWithActionInterface {
+    @Action("sIiiII__m_plemETHod") fun simpleMethod()
+}
