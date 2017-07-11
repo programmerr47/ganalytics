@@ -9,7 +9,6 @@ class AnalyticsGroupWrapper(private val eventProvider: EventProvider) : Analytic
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { _, method, _ ->
             val requiredClazzAnnotations = listOf(HasPrefix::class, NoPrefix::class, Convention::class)
             val clazzAnnotations = requiredClazzAnnotations.mapNotNull { clazz.getAnnotation(it.java) }
-            val splitter = clazz.getAnnotation(HasPrefix::class.java)?.splitter ?: "FUCK"
 
             val defAnnotations = AnalyticsDefAnnotations(clazzAnnotations.toTypedArray())
             AnalyticsSingleWrapper(eventProvider, defAnnotations).create(method.returnType)
