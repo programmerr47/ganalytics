@@ -7,10 +7,12 @@ class AnalyticsGroupWrapper(private val eventProvider: EventProvider) : Analytic
     @Suppress("unchecked_cast")
     override fun <T : Any> create(clazz: Class<T>): T {
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { _, method, _ ->
-            val requiredClazzAnnotations = listOf(HasPrefix::class, NoPrefix::class, Convention::class)
-            val clazzAnnotations = requiredClazzAnnotations.mapNotNull { clazz.getAnnotation(it.java) }
+            val requiredAnnotations = listOf(HasPrefix::class, NoPrefix::class, Convention::class, Category::class)
+            val actualAnnotations = requiredAnnotations.mapNotNull {
+                method.getAnnotation(it.java) ?: clazz.getAnnotation(it.java)
+            }
 
-            val defAnnotations = AnalyticsDefAnnotations(clazzAnnotations.toTypedArray())
+            val defAnnotations = AnalyticsDefAnnotations(actualAnnotations.toTypedArray())
             AnalyticsSingleWrapper(eventProvider, defAnnotations).create(method.returnType)
         } as T
     }

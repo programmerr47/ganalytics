@@ -126,9 +126,9 @@ interface TwoLabelsInterface {
     fun method(@Label param1: Number, @Label param2: Number)
 }
 
-interface bad___Named_interface {}
+interface bad___Named_interface
 
-interface `kotlin style super 4357 __ bad named interface` {}
+interface `kotlin style super 4357 __ bad named interface`
 
 @Convention
 interface AnalyticsConventionInterface {
