@@ -13,3 +13,9 @@ interface TypedLabelConverter<T> : LabelConverter {
 
     fun convertTyped(label: T): String
 }
+
+inline fun LabelConverter(crossinline converter: (Any) -> String) = object : LabelConverter {
+    override fun convert(label: Any) = converter(label)
+}
+
+operator fun LabelConverter.plus(other: LabelConverter) = concatListOf(this, other)

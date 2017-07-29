@@ -1,6 +1,7 @@
 package com.github.programmerr47.ganalytics.core
 
 import org.junit.Test
+import java.lang.reflect.UndeclaredThrowableException
 
 
 class LabelTest : AnalyticsWrapperTest {
@@ -40,19 +41,47 @@ class LabelTest : AnalyticsWrapperTest {
     }
 
     @Test(expected = ClassCastException::class)
-    fun checkArgumentWithCustomConverterBroken() {
-        run(ConverterBrokenInterface::class) { method(DummyClass(5, "hello")) }
+    fun checkArgumentWithWrongConverter() {
+        run(WrongConverterInterface::class) { method(DummyClass(5, "hello")) }
+    }
+
+    @Test
+    fun checkArgumentWithConverterOfParentClass() {
+        run(ParentClassConverterForChildInterface::class) {
+            assertEquals(Event("parentclassconverterforchildinterface", "method", "5.olleh")) { method(DummyReversedClass(5, "hello")) }
+        }
+    }
+
+    @Test(expected = UndeclaredThrowableException::class)
+    fun checkBrokenConverterError() {
+        run(BrokenConverterInterface::class) { method(DummyDataClass(5, "hello")) }
     }
 
     interface ConverterInterface {
         fun method(@Label(DummyDataClassConverter::class) param: DummyDataClass)
     }
 
-    interface ConverterBrokenInterface {
+    interface WrongConverterInterface {
         fun method(@Label(DummyDataClassConverter::class) param: DummyClass)
+    }
+
+    interface ParentClassConverterForChildInterface {
+        fun method(@Label(DummyClassConverter::class) param: DummyReversedClass)
+    }
+
+    interface BrokenConverterInterface {
+        fun method(@Label(BrokenConverter::class) param: DummyDataClass)
     }
 
     object DummyDataClassConverter : TypedLabelConverter<DummyDataClass> {
         override fun convertTyped(label: DummyDataClass) = label.run { "$id.$name" }
+    }
+
+    object DummyClassConverter : TypedLabelConverter<DummyClass> {
+        override fun convertTyped(label: DummyClass) = label.run { "$id.$name" }
+    }
+
+    class BrokenConverter(val arg: Int) : TypedLabelConverter<DummyDataClass> {
+        override fun convertTyped(label: DummyDataClass) = "$arg, ${label.name}"
     }
 }

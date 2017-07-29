@@ -2,7 +2,9 @@ package com.github.programmerr47.ganalytics.core
 
 import java.lang.reflect.Proxy
 
-class AnalyticsGroupWrapper(private val eventProvider: EventProvider) : AnalyticsWrapper {
+class AnalyticsGroupWrapper(
+        private val eventProvider: EventProvider,
+        private val globalSettings: GanalyticsSettings = GanalyticsSettings()) : AnalyticsWrapper {
 
     @Suppress("unchecked_cast")
     override fun <T : Any> create(clazz: Class<T>): T {
@@ -13,7 +15,9 @@ class AnalyticsGroupWrapper(private val eventProvider: EventProvider) : Analytic
             }
 
             val defAnnotations = AnalyticsDefAnnotations(actualAnnotations.toTypedArray())
-            AnalyticsSingleWrapper(eventProvider, defAnnotations).create(method.returnType)
+            AnalyticsSingleWrapper(eventProvider, globalSettings, defAnnotations).create(method.returnType)
         } as T
     }
 }
+
+inline fun AnalyticsGroupWrapper(crossinline provider: (Event) -> Unit) = AnalyticsGroupWrapper(EventProvider(provider))

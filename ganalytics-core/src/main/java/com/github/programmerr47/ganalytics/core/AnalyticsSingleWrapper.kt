@@ -8,6 +8,7 @@ import kotlin.reflect.KClass
 
 class AnalyticsSingleWrapper(
         private val eventProvider: EventProvider,
+        private val globalSettings: GanalyticsSettings = GanalyticsSettings(),
         private val defAnnotations: AnalyticsDefAnnotations = AnalyticsDefAnnotations()) : AnalyticsWrapper {
 
     @Suppress("unchecked_cast")
@@ -32,7 +33,10 @@ class AnalyticsSingleWrapper(
         } as T
     }
 
-    private val Class<*>.analyticsName get() = simpleName.decapitalize().removePrefix("analytics").capitalize()
+    private val Class<*>.analyticsName get() = if (globalSettings.cutOffAnalyticsClassPrefix)
+        simpleName.decapitalize().removePrefix("analytics").capitalize()
+    else
+        simpleName
 
     private fun applyConvention(convention: NamingConvention, name: String) = convention
             .withFirstFixingBadCodeStyle()
