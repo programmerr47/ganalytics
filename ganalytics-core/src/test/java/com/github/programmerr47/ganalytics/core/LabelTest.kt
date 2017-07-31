@@ -3,10 +3,7 @@ package com.github.programmerr47.ganalytics.core
 import org.junit.Test
 import java.lang.reflect.UndeclaredThrowableException
 
-
-class LabelTest : AnalyticsWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+class LabelTest : SingleWrapperTest() {
 
     @Test
     fun checkSimpleLabelTest() {
@@ -55,6 +52,23 @@ class LabelTest : AnalyticsWrapperTest {
     @Test(expected = UndeclaredThrowableException::class)
     fun checkBrokenConverterError() {
         run(BrokenConverterInterface::class) { method(DummyDataClass(5, "hello")) }
+    }
+
+    interface SimpleLabelInterface {
+        fun method(@Label param1: String, param2: Number)
+    }
+
+    interface NumberLabelInterface {
+        fun method1(@Label param1: Number, param2: Number)
+        fun method2(param1: Number, @Label param2: Number)
+    }
+
+    interface NumberLabelStringNotInterface {
+        fun method(@Label param1: Number, param2: String)
+    }
+
+    interface TwoLabelsInterface {
+        fun method(@Label param1: Number, @Label param2: Number)
     }
 
     interface ConverterInterface {

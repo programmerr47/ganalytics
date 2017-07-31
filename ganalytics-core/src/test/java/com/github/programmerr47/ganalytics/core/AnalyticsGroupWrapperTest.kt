@@ -3,9 +3,7 @@ package com.github.programmerr47.ganalytics.core
 import com.github.programmerr47.ganalytics.core.NamingConventions.*
 import org.junit.Test
 
-class AnalyticsGroupWrapperTest : AnalyticsWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = AnalyticsGroupWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+class AnalyticsGroupWrapperTest : GroupWrapperTest() {
 
     @Test
     fun checkDefaultBehavior() {

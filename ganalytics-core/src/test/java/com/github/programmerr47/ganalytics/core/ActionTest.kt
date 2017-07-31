@@ -2,9 +2,7 @@ package com.github.programmerr47.ganalytics.core
 
 import org.junit.Test
 
-class ActionTest : AnalyticsWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+class ActionTest : SingleWrapperTest() {
 
     @Test
     fun checkUselessEmptyAnnotation() {
@@ -28,5 +26,17 @@ class ActionTest : AnalyticsWrapperTest {
             assertEquals(Event("specificactionwithhasprefixinterface", "specific_function1")) { method1() }
             assertEquals(Event("specificactionwithhasprefixinterface", "method2")) { method2() }
         }
+    }
+
+    interface DummyActionInterface : SampleInterface {
+        @Action override fun method1()
+    }
+
+    interface SpecificActionInterface : SampleInterface {
+        @Action("function1") override fun method1()
+    }
+
+    interface SpecificActionWithHasPrefixInterface : SampleInterface {
+        @HasPrefix("specific", splitter = "_") @Action("function1") override fun method1()
     }
 }

@@ -2,9 +2,7 @@ package com.github.programmerr47.ganalytics.core
 
 import org.junit.Test
 
-class NoPrefixTest : AnalyticsWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+class NoPrefixTest : SingleWrapperTest() {
 
     @Test
     fun checkDefaultBehavior() {
@@ -29,4 +27,13 @@ class NoPrefixTest : AnalyticsWrapperTest {
             assertEquals(Event("dummyprefixesinterface", "method2")) { method2() }
         }
     }
+
+    @HasPrefix(splitter = ".")
+    interface AnalyticsDisablingClassPrefixInterface : SampleInterface {
+        @NoPrefix override fun method2()
+    }
+
+    @NoPrefix
+    @HasPrefix("dummy")
+    interface DummyPrefixesInterface : SampleInterface
 }

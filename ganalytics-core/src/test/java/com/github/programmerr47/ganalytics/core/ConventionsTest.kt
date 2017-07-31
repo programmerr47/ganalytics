@@ -52,4 +52,8 @@ class FixingBadCodeStyleConventionTest {
         Assert.assertEquals("DasTinHoffmanNamedMethod", convention.convert("dasTinHoffman_Named_Method"))
         Assert.assertEquals("KotlinStyleSuper4357BadNamedInterface", convention.convert(`kotlin style super 4357 __ bad named interface`::class.simpleName!!))
     }
+
+    interface bad___Named_interface
+
+    interface `kotlin style super 4357 __ bad named interface`
 }

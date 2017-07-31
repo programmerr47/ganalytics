@@ -1,11 +1,8 @@
 package com.github.programmerr47.ganalytics.core
 
-import org.junit.Assert
 import org.junit.Test
 
-class HasPrefixTest : AnalyticsWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+class HasPrefixTest : SingleWrapperTest() {
 
     @Test
     fun checkPrefixOnWholeInterface() {
@@ -55,5 +52,28 @@ class HasPrefixTest : AnalyticsWrapperTest {
             assertEquals(Event("splitterinterface", "splitterinterface_-_method2")) { method2() }
             assertEquals(Event("splitterinterface", "splitterinterface::method3")) { method3() }
         }
+    }
+
+    interface AnalyticInterfaceWithPrefix : SampleInterface {
+        @HasPrefix override fun method2()
+    }
+
+    @HasPrefix("prefix")
+    interface SpecificNamePrefixInterface : SampleInterface
+
+    interface InterfaceWithSpecificNamePrefixOnMethod : SampleInterface {
+        @HasPrefix("prefix") override fun method1()
+    }
+
+    @HasPrefix("interface")
+    interface ComplexNamedPrefixesInterface : SampleInterface{
+        @HasPrefix override fun method1()
+        @HasPrefix("method") fun method3()
+    }
+
+    @HasPrefix(splitter = "_-_")
+    interface SplitterInterface : SampleInterface {
+        @HasPrefix override fun method1()
+        @HasPrefix(splitter = "::") fun method3()
     }
 }

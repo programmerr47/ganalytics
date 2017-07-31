@@ -3,10 +3,7 @@ package com.github.programmerr47.ganalytics.core
 import org.junit.Test
 import java.math.BigDecimal
 
-class LabelDefaultsTest : AnalyticsWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
-
+class LabelDefaultsTest : SingleWrapperTest() {
     @Test
     fun checkLabelInSingleParameterMethods() {
         val dummyClass = DummyClass(101, "Holy world!")
@@ -59,5 +56,43 @@ class LabelDefaultsTest : AnalyticsWrapperTest {
         run(TwoParameterBothNumberInterface::class) {
             assertEquals(Event("interface", "method", "1", 2)) { method(1, 2) }
         }
+    }
+
+    interface SingleParameterMethodInterface {
+        fun intMethod(param: Int)
+        fun strMethod(param: String)
+        fun dummyClassMethod(param: DummyClass)
+        fun dummyDataClassMethod(param: DummyDataClass)
+        fun dummyEnumClassMethod(param: DummyEnum)
+    }
+
+    interface MoreTwoParameterMethodInterface {
+        fun method1()
+        fun method2(param1: String, param2: Int, param3: Long)
+    }
+
+    @Category("interface")
+    interface TwoParameterMethodStringAndNumberInterface {
+        fun intStrMethod(param1: Int, param2: String)
+        fun strIntMethod(param1: String, param2: Int)
+        fun strLongMethod(param1: String, param2: Long)
+        fun strNumberMethod(param1: String, param2: Number)
+    }
+
+    @Category("interface")
+    interface TwoParameterMethodNoNumberInterface {
+        fun noNumberMethod(param1: DummyEnum, param2: String)
+    }
+
+    @Category("interface")
+    interface TwoParameterMethodOneNumberInterface {
+        fun default(param1: String, param2: Number)
+        fun reversed(param1: Number, param2: String)
+        fun custom(param1: DummyDataClass, param2: Number)
+    }
+
+    @Category("interface")
+    interface TwoParameterBothNumberInterface {
+        fun method(param1: Number, param2: Number)
     }
 }

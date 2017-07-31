@@ -2,9 +2,7 @@ package com.github.programmerr47.ganalytics.core
 
 import org.junit.Test
 
-class CategoryTest : AnalyticsWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+class CategoryTest : SingleWrapperTest() {
 
     @Test
     fun checkUselessEmptyAnnotation() {
@@ -29,4 +27,10 @@ class CategoryTest : AnalyticsWrapperTest {
             assertEquals(Event("analyticscategory", "method2")) { method2() }
         }
     }
+
+    @Category
+    interface DummyCategoryInterface : SampleInterface
+
+    @Category("category")
+    interface AnalyticsSpecificCategoryInterface : SampleInterface
 }

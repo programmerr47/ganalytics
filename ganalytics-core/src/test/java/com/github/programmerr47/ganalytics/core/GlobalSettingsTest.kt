@@ -3,9 +3,8 @@ package com.github.programmerr47.ganalytics.core
 import org.junit.Test
 import kotlin.reflect.KClass
 
-class GlobalSettingsTest : AnalyticsWrapperTest {
+class GlobalSettingsTest : WrapperTest {
     override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = testSingleWrapper()
 
     @Test
     fun checkCuttingOffAnalyticsPrefix() {
@@ -26,7 +25,4 @@ class GlobalSettingsTest : AnalyticsWrapperTest {
 
     private fun testSingleWrapper(settings: GanalyticsSettings = GanalyticsSettings()) =
             AnalyticsSingleWrapper(testProvider, settings)
-
-    private inline fun <T : Any> run(wrapper: AnalyticsWrapper, clazz: KClass<T>, block: T.() -> Unit) =
-            wrapper.create(clazz).run(block)
 }

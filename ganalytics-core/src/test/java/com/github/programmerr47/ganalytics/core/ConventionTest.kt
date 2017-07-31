@@ -2,9 +2,7 @@ package com.github.programmerr47.ganalytics.core
 
 import org.junit.Test
 
-class ConventionTest : AnalyticsWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper = AnalyticsSingleWrapper(compose(EventProvider { System.out.println(it) }, testProvider))
+class ConventionTest : SingleWrapperTest() {
 
     @Test
     fun checkUselessEmptyAnnotation() {
@@ -32,6 +30,22 @@ class ConventionTest : AnalyticsWrapperTest {
         run(ConventionWithActionInterface::class, {
             assertEquals(Event("Convention_with_action_interface", "sIiiII__m_plemETHod"), { simpleMethod() })
         })
+    }
+
+    @Convention
+    interface AnalyticsConventionInterface {
+        fun simpleMethod()
+    }
+
+    @Convention(NamingConventions.UPPER_SNAKE_CASE)
+    @Category("MySuPerCaT__ego_RY")
+    interface ConventionWithCategoryInterface {
+        fun simpleMethod()
+    }
+
+    @Convention(NamingConventions.UPPER_SNAKE_CASE)
+    interface ConventionWithActionInterface {
+        @Action("sIiiII__m_plemETHod") fun simpleMethod()
     }
 }
 
