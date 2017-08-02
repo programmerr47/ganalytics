@@ -10,6 +10,12 @@ interface AnalyticsInterface : SampleInterface
 @HasPrefix
 interface AnalyticsHasPrefixInterface : SampleInterface
 
+@HasPrefix(splitter = "_-_")
+interface SplitterInterface : SampleInterface {
+    @HasPrefix override fun method1()
+    @HasPrefix(splitter = "::") fun method3()
+}
+
 @NoPrefix
 interface NoPrefixDefaultInterface : SampleInterface {
     @NoPrefix override fun method1()

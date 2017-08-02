@@ -62,8 +62,10 @@ class AnalyticsSingleWrapper(
     }
 
     private fun applyPrefix(input: String, default: String, hasPrefix: HasPrefix?): String {
-        return if (hasPrefix == null) input else applyPrefix(input, default, hasPrefix.name, hasPrefix.splitter)
+        return if (hasPrefix == null) input else applyPrefix(input, default, hasPrefix.name, hasPrefix.globalSplitter)
     }
+
+    private val HasPrefix.globalSplitter get() = if (splitter == "") globalSettings.prefixSplitter else splitter
 
     private fun applyPrefix(input: String, default: String, prefix: String, splitter: String): String {
         return (prefix.getOr(default)) + splitter + input

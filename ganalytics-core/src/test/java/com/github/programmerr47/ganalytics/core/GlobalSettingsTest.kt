@@ -20,6 +20,24 @@ class GlobalSettingsTest : WrapperTest {
                 }
     }
 
+    @Test
+    fun checkGlobalSplitter() {
+        val settings = GanalyticsSettings { prefixSplitter = "^_^" }
+        run(settings, AnalyticsInterface::class) {
+            assertEquals(Event("interface", "method1")) { method1() }
+            assertEquals(Event("interface", "method2")) { method2() }
+        }
+        run(settings, AnalyticsHasPrefixInterface::class) {
+            assertEquals(Event("hasprefixinterface", "hasprefixinterface^_^method1")) { method1() }
+            assertEquals(Event("hasprefixinterface", "hasprefixinterface^_^method1")) { method1() }
+        }
+        run(settings, SplitterInterface::class) {
+            assertEquals(Event("splitterinterface", "splitterinterface^_^method1")) { method1() }
+            assertEquals(Event("splitterinterface", "splitterinterface_-_method2")) { method2() }
+            assertEquals(Event("splitterinterface", "splitterinterface::method3")) { method3() }
+        }
+    }
+
     private inline fun <T : Any> run(settings: GanalyticsSettings, clazz: KClass<T>, block: T.() -> Unit) =
             run(testSingleWrapper(settings), clazz, block)
 

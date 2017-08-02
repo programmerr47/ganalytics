@@ -70,10 +70,4 @@ class HasPrefixTest : SingleWrapperTest() {
         @HasPrefix override fun method1()
         @HasPrefix("method") fun method3()
     }
-
-    @HasPrefix(splitter = "_-_")
-    interface SplitterInterface : SampleInterface {
-        @HasPrefix override fun method1()
-        @HasPrefix(splitter = "::") fun method3()
-    }
 }
