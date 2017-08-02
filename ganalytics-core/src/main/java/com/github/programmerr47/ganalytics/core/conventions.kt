@@ -24,6 +24,6 @@ fun fixingBadCodeStyleConvention() = object : NamingConvention {
 
 internal fun NamingConvention.withFirstFixingBadCodeStyle() = let {
     object : NamingConvention {
-        override fun convert(name: String) = it.convert(fixingBadCodeStyleConvention().convert(name))
+        override fun convert(name: String) = it.convert(fixingBadCodeStyleConvention().convert(name).decapitalize())
     }
 }

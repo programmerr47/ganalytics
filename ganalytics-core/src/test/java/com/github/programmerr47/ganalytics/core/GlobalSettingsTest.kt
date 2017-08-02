@@ -38,9 +38,25 @@ class GlobalSettingsTest : WrapperTest {
         }
     }
 
+    @Test
+    fun checkGlobalConvention() {
+        val settings = GanalyticsSettings { namingConvention = testConvention() }
+        run(settings, SampleInterface::class) {
+            assertEquals(Event("s_a_m_p_l_e_I_n_t_e_r_f_a_c_e", "m_e_t_h_o_d_1")) { method1() }
+            assertEquals(Event("s_a_m_p_l_e_I_n_t_e_r_f_a_c_e", "m_e_t_h_o_d_2")) { method2() }
+        }
+        run(settings, AnalyticsLibConventionInterface::class) {
+            assertEquals(Event("lib_convention_interface", "simple_method")) { simpleMethod() }
+        }
+    }
+
     private inline fun <T : Any> run(settings: GanalyticsSettings, clazz: KClass<T>, block: T.() -> Unit) =
             run(testSingleWrapper(settings), clazz, block)
 
     private fun testSingleWrapper(settings: GanalyticsSettings = GanalyticsSettings()) =
             AnalyticsSingleWrapper(testProvider, settings)
+
+    private fun testConvention() = object : NamingConvention {
+        override fun convert(name: String) = name.toCharArray().joinToString(separator = "_")
+    }
 }

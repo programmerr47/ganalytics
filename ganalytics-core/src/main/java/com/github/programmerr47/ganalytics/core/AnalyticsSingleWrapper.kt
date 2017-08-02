@@ -1,6 +1,5 @@
 package com.github.programmerr47.ganalytics.core
 
-import com.github.programmerr47.ganalytics.core.NamingConventions.LOWER_CASE
 import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
@@ -14,7 +13,7 @@ class AnalyticsSingleWrapper(
     @Suppress("unchecked_cast")
     override fun <T : Any> create(clazz: Class<T>): T {
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { _, method, args ->
-            val convention = getAnnotation(Convention::class, clazz, defAnnotations)?.value ?: LOWER_CASE
+            val convention = getAnnotation(Convention::class, clazz, defAnnotations)?.value ?: globalSettings.namingConvention
             val category = applyCategory(applyConvention(convention, clazz.analyticsName), clazz, defAnnotations)
 
             val defaultAction = applyAction(method, applyConvention(convention, method.name))
