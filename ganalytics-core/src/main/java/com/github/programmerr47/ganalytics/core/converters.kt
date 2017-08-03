@@ -1,5 +1,8 @@
 package com.github.programmerr47.ganalytics.core
 
+typealias TypedConverterPair<T> = Pair<Class<out T>, TypedLabelConverter<out T>>
+typealias AnyTypedConverterPair = TypedConverterPair<Any>
+
 interface LabelConverter {
     fun convert(label: Any): String
 }
@@ -18,4 +21,10 @@ inline fun LabelConverter(crossinline converter: (Any) -> String) = object : Lab
     override fun convert(label: Any) = converter(label)
 }
 
-operator fun LabelConverter.plus(other: LabelConverter) = concatListOf(this, other)
+inline fun <T> TypeConverter(crossinline converter: (T) -> String) = object : TypedLabelConverter<T> {
+    override fun convertTyped(label: T) = converter(label)
+}
+
+inline fun <reified T> TypeConverterPair(crossinline converter: (T) -> String) = T::class.java to TypeConverter(converter)
+
+operator fun AnyTypedConverterPair.plus(other: AnyTypedConverterPair) = converters(this, other)

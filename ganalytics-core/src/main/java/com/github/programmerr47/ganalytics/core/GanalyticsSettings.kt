@@ -1,20 +1,24 @@
 package com.github.programmerr47.ganalytics.core
 
-class ConcatList<T>(private val origin: MutableList<T>) {
+class ConcatList(private val origin: HashMap<Class<out Any>, TypedLabelConverter<out Any>>) {
 
-    operator fun plus(item: T) = apply { origin.add(item) }
-    operator fun plusAssign(item: ConcatList<T>) {
-        origin.addAll(item.origin)
+    operator fun plus(item: Pair<Class<out Any>, TypedLabelConverter<out Any>>) = apply {
+        origin.put(item.first, item.second)
+    }
+
+    operator fun plusAssign(item: ConcatList) {
+        origin.putAll(item.origin)
     }
 }
 
-fun <T> concatListOf(vararg elements: T): ConcatList<T> = ConcatList(mutableListOf(*elements))
+fun <T : Any> converters(vararg elements: TypedConverterPair<T>) = ConcatList(hashMapOf(*elements))
 
 class GanalyticsSettings {
-    var prefixSplitter: String = ""
-    var namingConvention: NamingConvention = NamingConventions.LOWER_CASE
-    var cutOffAnalyticsClassPrefix: Boolean = true
-//    var labelTypeConverters: ConcatList<LabelConverter> = concatListOf()
+    var prefixSplitter = ""
+    var namingConvention = NamingConventions.LOWER_CASE
+    var cutOffAnalyticsClassPrefix = true
+    var labelTypeConverters: ConcatList = converters<Any>()
+    var useTypeConvertersForSubType = true
 }
 
 inline fun GanalyticsSettings(init: GanalyticsSettings.() -> Unit) = GanalyticsSettings().apply { init() }
