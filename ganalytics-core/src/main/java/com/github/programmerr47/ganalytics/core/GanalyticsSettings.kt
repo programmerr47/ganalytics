@@ -9,16 +9,18 @@ class ConcatList(private val origin: HashMap<Class<out Any>, TypedLabelConverter
     operator fun plusAssign(item: ConcatList) {
         origin.putAll(item.origin)
     }
+
+    fun lookup(clazz: Class<Any>) = origin[clazz]
 }
 
 fun <T : Any> converters(vararg elements: TypedConverterPair<T>) = ConcatList(hashMapOf(*elements))
 
 class GanalyticsSettings {
-    var prefixSplitter = ""
-    var namingConvention = NamingConventions.LOWER_CASE
-    var cutOffAnalyticsClassPrefix = true
+    var prefixSplitter: String = ""
+    var namingConvention: NamingConvention = NamingConventions.LOWER_CASE
+    var cutOffAnalyticsClassPrefix: Boolean = true
     var labelTypeConverters: ConcatList = converters<Any>()
-    var useTypeConvertersForSubType = true
+    var useTypeConvertersForSubType: Boolean = true
 }
 
 inline fun GanalyticsSettings(init: GanalyticsSettings.() -> Unit) = GanalyticsSettings().apply { init() }

@@ -112,12 +112,35 @@ class AnalyticsSingleWrapper(
     }
 
     private fun convertLabelArg(label: Any, annotation: Label?): String {
-        return retrieveConverter(annotation?.converter).convert(label)
+        return chooseConverter(label, annotation).convert(label)
     }
 
-    private fun retrieveConverter(klass: KClass<out LabelConverter>?): LabelConverter {
-        return klass?.run { objectInstance ?: java.newInstance() } ?: SimpleLabelConverter
+    private fun chooseConverter(label: Any, annotation: Label?): LabelConverter {
+        return annotation?.converter?.init() ?: lookupGlobalConverter(label) ?: SimpleLabelConverter
     }
+
+    private fun lookupGlobalConverter(label: Any): LabelConverter? {
+        label.converterClasses().forEach {
+            val converter = globalSettings.labelTypeConverters.lookup(it)
+            if (converter != null) return converter
+        }
+        return null
+    }
+
+    private fun Any.converterClasses() = if (globalSettings.useTypeConvertersForSubType)
+        javaClass.classHierarchy()
+    else
+        arrayListOf(javaClass)
+
+    private fun Class<in Any>.classHierarchy() = ArrayList<Class<Any>>().also {
+        var clazz: Class<in Any>? = this
+        do {
+            it.add(clazz!!)
+            clazz = clazz.superclass
+        } while (clazz != null)
+    }
+
+    private fun KClass<out LabelConverter>.init() = objectInstance ?: java.newInstance()
 
     private fun <R : Any> Array<*>.firstOrNull(klass: KClass<R>): R? {
         return filterIsInstance(klass.java).firstOrNull()

@@ -50,6 +50,40 @@ class GlobalSettingsTest : WrapperTest {
         }
     }
 
+    @Test
+    fun checkGlobalConvertersWithSubtyping() {
+        arrayOf(
+                GanalyticsSettings { labelTypeConverters += dummyClassConverter() },
+                GanalyticsSettings {
+                    labelTypeConverters += dummyClassConverter()
+                    useTypeConvertersForSubType = true
+                })
+                .forEach {
+                    run(it, ConverterInterface::class) {
+                        assertEquals(Event("converterinterface", "method1", "5 and test")) { method1(DummyClass(5, "test")) }
+                        assertEquals(Event("converterinterface", "method2", "5 and tset")) { method2(DummyReversedClass(5, "test")) }
+                        assertEquals(Event("converterinterface", "method3", "DummyDataClass(id=5, name=test)")) { method3(DummyDataClass(5, "test")) }
+                        assertEquals(Event("converterinterface", "method4", "DummyClass(id=5, name=test)")) { method4(DummyClass(5, "test")) }
+                        assertEquals(Event("converterinterface", "method5", "5.test")) { method5(DummyClass(5, "test")) }
+                    }
+                }
+    }
+
+    @Test
+    fun checkGlobalConvertersWithoutSubtyping() {
+        val settings = GanalyticsSettings {
+            labelTypeConverters += dummyClassConverter()
+            useTypeConvertersForSubType = false
+        }
+        run(settings, ConverterInterface::class) {
+            assertEquals(Event("converterinterface", "method1", "5 and test")) { method1(DummyClass(5, "test")) }
+            assertEquals(Event("converterinterface", "method2", "DummyReversedClass(id=5, name=tset)")) { method2(DummyReversedClass(5, "test")) }
+            assertEquals(Event("converterinterface", "method3", "DummyDataClass(id=5, name=test)")) { method3(DummyDataClass(5, "test")) }
+            assertEquals(Event("converterinterface", "method4", "DummyClass(id=5, name=test)")) { method4(DummyClass(5, "test")) }
+            assertEquals(Event("converterinterface", "method5", "5.test")) { method5(DummyClass(5, "test")) }
+        }
+    }
+
     private inline fun <T : Any> run(settings: GanalyticsSettings, clazz: KClass<T>, block: T.() -> Unit) =
             run(testSingleWrapper(settings), clazz, block)
 
@@ -58,5 +92,19 @@ class GlobalSettingsTest : WrapperTest {
 
     private fun testConvention() = object : NamingConvention {
         override fun convert(name: String) = name.toCharArray().joinToString(separator = "_")
+    }
+
+    private fun dummyClassConverter() = TypeConverterPair<DummyClass> { it.run { "$id and $name" } }
+
+    private interface ConverterInterface {
+        fun method1(param: DummyClass)
+        fun method2(param: DummyReversedClass)
+        fun method3(param: DummyDataClass)
+        fun method4(@Label param: DummyClass)
+        fun method5(@Label(DummyClassConverter::class) param: DummyClass)
+    }
+
+    object DummyClassConverter : TypedLabelConverter<DummyClass> {
+        override fun convertTyped(label: DummyClass) = label.run { "$id.$name" }
     }
 }
