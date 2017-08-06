@@ -21,6 +21,10 @@ class GanalyticsSettings {
     var cutOffAnalyticsClassPrefix: Boolean = true
     var labelTypeConverters: ConcatList = converters<Any>()
     var useTypeConvertersForSubType: Boolean = true
+
+    fun <T : Any> addTypeConverter(type: Class<T>, converter: (T) -> String) = apply {
+        labelTypeConverters += type to TypeConverter(converter)
+    }
 }
 
 inline fun GanalyticsSettings(init: GanalyticsSettings.() -> Unit) = GanalyticsSettings().apply { init() }
