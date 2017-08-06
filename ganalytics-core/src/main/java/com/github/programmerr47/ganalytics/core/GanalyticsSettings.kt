@@ -29,8 +29,11 @@ class GanalyticsSettings {
 
 inline fun GanalyticsSettings(init: GanalyticsSettings.() -> Unit) = GanalyticsSettings().apply { init() }
 
-fun GanalyticsSettings.createGroup(eventProvider: EventProvider) = AnalyticsGroupWrapper(eventProvider)
-inline fun GanalyticsSettings.createGroup(crossinline eventProvider: (Event) -> Unit) = AnalyticsGroupWrapper(eventProvider)
+fun GanalyticsSettings.createGroup(eventProvider: EventProvider) = AnalyticsGroupWrapper(eventProvider, this)
+inline fun GanalyticsSettings.createGroup(crossinline eventProvider: (Event) -> Unit) = AnalyticsGroupWrapper(eventProvider, this)
+
+fun GanalyticsSettings.createSingle(eventProvider: EventProvider) = AnalyticsSingleWrapper(eventProvider, this)
+inline fun GanalyticsSettings.createSingle(crossinline eventProvider: (Event) -> Unit) = AnalyticsSingleWrapper(eventProvider, this)
 
 inline fun Ganalytics(eventProvider: EventProvider, init: GanalyticsSettings.() -> Unit) = GanalyticsSettings(init).createGroup(eventProvider)
 inline fun Ganalytics(crossinline eventProvider: (Event) -> Unit, init: GanalyticsSettings.() -> Unit) = GanalyticsSettings(init).createGroup(eventProvider)

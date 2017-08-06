@@ -146,3 +146,7 @@ class AnalyticsSingleWrapper(
         return filterIsInstance(klass.java).firstOrNull()
     }
 }
+
+inline fun AnalyticsSingleWrapper(crossinline provider: (Event) -> Unit,
+                                 globalSettings: GanalyticsSettings = GanalyticsSettings()) =
+        AnalyticsSingleWrapper(EventProvider(provider), globalSettings)

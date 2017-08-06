@@ -20,4 +20,6 @@ class AnalyticsGroupWrapper(
     }
 }
 
-inline fun AnalyticsGroupWrapper(crossinline provider: (Event) -> Unit) = AnalyticsGroupWrapper(EventProvider(provider))
+inline fun AnalyticsGroupWrapper(crossinline provider: (Event) -> Unit,
+                                 globalSettings: GanalyticsSettings = GanalyticsSettings()) =
+        AnalyticsGroupWrapper(EventProvider(provider), globalSettings)
