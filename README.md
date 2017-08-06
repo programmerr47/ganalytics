@@ -14,8 +14,8 @@ interface SampleInterface {
 or
 ```kotlin
 interface SampleGroupInterface {
-    @Prefix fun method1(): SampleInterface1
-    @Convention(NamingConventions.LOWER_CAMEL_CASE) fun method2(): SampleInterface2
+    @Prefix fun sampleInterface(): SampleInterface
+    @Convention(NamingConventions.LOWER_CAMEL_CASE) fun anotherInterface(): AnotherInterface
 }
 ```
 For more information about [interfaces](https://github.com/programmerr47/ganalytics/wiki/Interfaces) and [annotations](https://github.com/programmerr47/ganalytics/wiki/Annotations) read linked sections.
@@ -57,6 +57,25 @@ val ganalytics = GanalyticsSettings {
 3. Pass an interface class to `ganalytics`: 
 
 `val analytics = ganalytics.create(SampleGroupInterface::class)`
+
+4. Now you can use `analytics`. For example:
+
+`analytics.sampleInterface().method1()`
+
+will print to the standart output: `Event(category=sampleinterface, action=sampleinterface_method1)`
+
+**Note:** instead of `System.out.println` you can pass, for example:
+
+```kotlin 
+googleAnalyticsTracker.send(HitBuilders.EventBuilder()
+        .setCategory(it.category)
+        .setAction(it.action)
+        .setLabel(it.label)
+        .setValue(it.value)
+        .build())
+```
+
+Or any analytics method as you want.
 
 For more info of basic usage see samples folder in project.
 Also please visit [the wiki pages](https://github.com/programmerr47/ganalytics/wiki) to know more details.
