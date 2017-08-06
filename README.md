@@ -55,6 +55,7 @@ val ganalytics = GanalyticsSettings {
 ```
 
 3. Pass an interface class to `ganalytics`: 
+
 `val analytics = ganalytics.create(SampleGroupInterface::class)`
 
 For more info of basic usage see samples folder in project.
