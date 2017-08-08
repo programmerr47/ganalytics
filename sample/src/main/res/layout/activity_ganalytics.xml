@@ -24,19 +24,22 @@
                 android:id="@+id/b_car_sold"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Car sold"/>
 
             <Button
                 android:id="@+id/b_car_type"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Car type"/>
 
             <Button
                 android:id="@+id/b_car_price"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Car price"/>
 
         </LinearLayout>
 
@@ -50,19 +53,22 @@
                 android:id="@+id/b_seller_fair"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Seller isFair"/>
 
             <Button
                 android:id="@+id/b_seller_sell"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Seller sellCar"/>
 
             <Button
                 android:id="@+id/b_seller_add"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Seller addCar"/>
 
         </LinearLayout>
 
@@ -76,37 +82,61 @@
                 android:id="@+id/b_customer_buy"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Customer BuyCar"/>
 
             <Button
                 android:id="@+id/b_customer_start"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Customer Start"/>
 
             <Button
                 android:id="@+id/b_customer_end"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="Customer End"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Output"
+            android:text="@string/category"
             android:textSize="16sp"/>
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/tv_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/action"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tv_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/label"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

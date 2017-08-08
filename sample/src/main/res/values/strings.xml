@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Ganalytics Sample</string>
+    <string name="category">Category: %1$s</string>
+    <string name="action">Action: %1$s</string>
+    <string name="label">Label: %1$s</string>
+    <string name="no">No</string>
 </resources>
