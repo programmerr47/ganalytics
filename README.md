@@ -1,5 +1,21 @@
+# Overview
+Ganalytics is tiny api layer for any analytics in application. It provides object oriented, typesafe, stricked and testable way for organize work with analytics through the application. More information on [wiki pages](https://github.com/programmerr47/ganalytics/wiki).
+
 # Get library
----
+With gradle:
+```
+compile 'com.github.programmerr47:ganalytics-core:1.0.0'
+```
+
+With maven:
+```
+<dependency>
+  <groupId>com.github.programmerr47</groupId>
+  <artifactId>ganalytics-core</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
+```
 
 # Basic Usage
 To start with gathering analytics:
