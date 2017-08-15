@@ -1,4 +1,7 @@
 # Overview
+[ ![Download](https://api.bintray.com/packages/programmerr47/maven/ganalytics-core/images/download.svg) ](https://bintray.com/programmerr47/maven/ganalytics-core/_latestVersion)
+
+
 Ganalytics is tiny api layer for any analytics in application. It provides object oriented, typesafe, stricked and testable way for organize work with analytics through the application. More information on [wiki pages](https://github.com/programmerr47/ganalytics/wiki).
 
 # Get library
