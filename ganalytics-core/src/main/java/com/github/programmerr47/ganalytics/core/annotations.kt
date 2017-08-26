@@ -16,7 +16,10 @@ annotation class Category(val name: String = "")
 annotation class Action(val name: String = "")
 
 @Target(VALUE_PARAMETER)
-annotation class Label(val converter: KClass<out LabelConverter> = SimpleLabelConverter::class )
+annotation class Label(val converter: KClass<out LabelConverter> = SimpleLabelConverter::class)
+
+@Target(FUNCTION)
+annotation class LabelFun(val action: String)
 
 @Target(CLASS, FUNCTION)
 annotation class Convention(val value: NamingConventions = NamingConventions.LOWER_CASE)

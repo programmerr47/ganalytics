@@ -23,7 +23,8 @@ class AnalyticsSingleWrapper(
                 applyPrefix(defaultAction, category, method, clazz, defAnnotations)
             }
 
-            val (labelArg, valueArg) = actionArgsManager.manage(method, args)
+            val argsManager = resolveArgsMananger(method, convention, actionArgsManager)
+            val (labelArg, valueArg) = argsManager.manage(method, args)
             val label = labelArg ?: ""
             val value = (valueArg ?: 0).toLong()
 
@@ -37,10 +38,6 @@ class AnalyticsSingleWrapper(
     else
         simpleName
 
-    private fun applyConvention(convention: NamingConvention, name: String) = convention
-            .withFirstFixingBadCodeStyle()
-            .convert(name.decapitalize())
-
     private fun applyCategory(default: String, vararg elements: AnnotatedElement) =
             applyCategory(getAnnotation(Category::class, *elements), default)
 
@@ -49,11 +46,9 @@ class AnalyticsSingleWrapper(
     }
 
     private fun applyAction(element: AnnotatedElement, default: String): String {
-        return applyAction(element.getAnnotation(Action::class.java), default)
-    }
-
-    private fun applyAction(action: Action?, default: String): String {
-        return action?.name?.takeNotEmpty() ?: default
+        return element.getAnnotation(LabelFun::class.java)?.action ?:
+                element.getAnnotation(Action::class.java)?.name ?:
+                default
     }
 
     private fun applyPrefix(input: String, default: String, vararg elements: AnnotatedElement): String {
@@ -74,10 +69,24 @@ class AnalyticsSingleWrapper(
 
     private fun String.takeNotEmpty() = takeUnless(String::isEmpty)
 
+    private fun resolveArgsMananger(element: AnnotatedElement, convention: NamingConvention, default: ArgsManager): ArgsManager {
+        return if (element.getAnnotation(LabelFun::class.java) != null) {
+            if (element.getAnnotation(Action::class.java) != null) {
+                throw IllegalStateException("@Action and @LabelFun incompatible. Please, use one of them")
+            }
+
+            LabelArgsManager(convention)
+        } else default
+    }
+
     private fun <T : Annotation> getAnnotation(clazz: KClass<T>, vararg elements: AnnotatedElement): T? {
         return elements.map { it.getAnnotation(clazz.java) }.firstOrNull { it != null }
     }
 }
+
+internal fun applyConvention(convention: NamingConvention, name: String) = convention
+        .withFirstFixingBadCodeStyle()
+        .convert(name.decapitalize())
 
 inline fun AnalyticsSingleWrapper(crossinline provider: (Event) -> Unit,
                                  globalSettings: GanalyticsSettings = GanalyticsSettings()) =

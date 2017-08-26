@@ -7,6 +7,28 @@ interface ArgsManager {
     fun manage(method: Method, args: Array<Any>?): Pair<String?, Number?>
 }
 
+class LabelArgsManager(
+        private val convention: NamingConvention) : ArgsManager {
+    override fun manage(method: Method, args: Array<Any>?) = when (args?.size) {
+        in arrayOf(0, null) -> buildPair(method, null)
+        1 -> buildPair(method, manageArgAsValue(method, args))
+        else -> throw IllegalArgumentException("Method ${method.name} are label, so it can have up to 1 parameter, which is value")
+    }
+
+    private fun buildPair(method: Method, value: Number?) = Pair(applyConvention(convention, method.name), value)
+
+    private fun manageArgAsValue(method: Method, args: Array<Any>): Number? {
+        return manageValueArg(method, args[0], method.parameterAnnotations[0].label())
+    }
+
+    private fun manageValueArg(method: Method, vArg: Any, vArgA: Label?) = if (vArgA != null) {
+        throw IllegalArgumentException("Method ${method.name} can not have @Label annotation on parameters, since it is already a label")
+    } else {
+        vArg as? Number ?:
+                throw IllegalArgumentException("Method ${method.name} can have only 1 parameter which must be a Number")
+    }
+}
+
 class ActionArgsManager(
         private val globalSettings: GanalyticsSettings) : ArgsManager {
 
@@ -14,14 +36,12 @@ class ActionArgsManager(
         in arrayOf(0, null) -> Pair(null, null)
         1 -> Pair(convertLabelArg(args[0], method.parameterAnnotations[0]), null)
         2 -> manageTwoArgs(args, method.parameterAnnotations)
-        else -> throw IllegalArgumentException("Method ${method.name} have ${method.parameterCount} parameter(s). You can have up to 2 parameters in methods.")
+        else -> throw IllegalArgumentException("Method ${method.name} have ${method.parameterCount} parameter(s). You can have up to 2 parameters in ordinary methods.")
     }
 
     private fun manageTwoArgs(args: Array<Any>, annotations: Array<Array<Annotation>>): Pair<String, Number> {
         return manageTwoArgs(args[0], annotations[0].label(), args[1], annotations[1].label())
     }
-
-    private fun Array<Annotation>.label() = firstOrNull(Label::class)
 
     private fun manageTwoArgs(arg1: Any, argA1: Label?, arg2: Any, argA2: Label?): Pair<String, Number> {
         return manageArgAsValue(arg2, argA2, arg1, argA1) {
@@ -73,8 +93,10 @@ class ActionArgsManager(
     }
 
     private fun KClass<out LabelConverter>.init() = objectInstance ?: java.newInstance()
+}
 
-    private fun <R : Any> Array<*>.firstOrNull(klass: KClass<R>): R? {
-        return filterIsInstance(klass.java).firstOrNull()
-    }
+private fun Array<Annotation>.label() = firstOrNull(Label::class)
+
+private fun <R : Any> Array<*>.firstOrNull(klass: KClass<R>): R? {
+    return filterIsInstance(klass.java).firstOrNull()
 }
