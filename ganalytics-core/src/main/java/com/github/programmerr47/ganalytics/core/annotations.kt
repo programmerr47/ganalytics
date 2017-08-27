@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 annotation class HasPrefix(val name: String = "", val splitter: String = "")
 
 @Target(CLASS, FUNCTION, PROPERTY)
-annotation class HasPostfix(val name: String = "", val splitter: String = "")
+annotation class HasPostfix(val name: String, val splitter: String = "")
 
 @Target(CLASS, FUNCTION, PROPERTY)
 annotation class NoPrefix
