@@ -23,10 +23,10 @@ inline fun <T : Any> StableWrapperTest.run(clazz: KClass<T>, block: T.() -> Unit
 
 abstract class SingleWrapperTest : StableWrapperTest {
     override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper: AnalyticsWrapper = AnalyticsSingleWrapper(testProvider)
+    override val wrapper: AnalyticsSingleWrapper = AnalyticsSingleWrapper(testProvider)
 }
 
 abstract class GroupWrapperTest : StableWrapperTest {
     override val testProvider: TestEventProvider = TestEventProvider()
-    override val wrapper: AnalyticsWrapper = AnalyticsGroupWrapper(testProvider)
+    override val wrapper: AnalyticsGroupWrapper = AnalyticsGroupWrapper(testProvider)
 }

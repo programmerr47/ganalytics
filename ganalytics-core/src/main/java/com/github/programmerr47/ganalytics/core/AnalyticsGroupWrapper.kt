@@ -1,11 +1,10 @@
 package com.github.programmerr47.ganalytics.core
 
-import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import kotlin.reflect.KClass
 
-typealias AnnotationClasses = List<KClass<out Annotation>>
+internal typealias AnnotationClasses = List<KClass<out Annotation>>
 
 class AnalyticsGroupWrapper(
         private val eventProvider: EventProvider,
