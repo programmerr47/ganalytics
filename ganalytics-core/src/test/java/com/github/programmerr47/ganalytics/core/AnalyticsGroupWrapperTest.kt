@@ -193,6 +193,36 @@ class AnalyticsGroupWrapperTest : GroupWrapperTest() {
         }
     }
 
+    @Test
+    fun checkValProperties() {
+        run(PropertiesGroupInterface::class) {
+            with(sample) {
+                assertEquals(Event("sampleinterface", "method1")) { method1() }
+                assertEquals(Event("sampleinterface", "method2")) { method2() }
+            }
+            with(convention) {
+                assertEquals(Event("lib_convention_interface", "simple_method")) { simpleMethod() }
+            }
+        }
+    }
+
+    @Test
+    fun checkAnnotatedValProperties() {
+        run(PropertiesAnnotationInterface::class) {
+            with(sample) {
+                assertEquals(Event("SAMPLE", "method1")) { method1() }
+                assertEquals(Event("SAMPLE", "method2")) { method2() }
+            }
+            with(sample2) {
+                assertEquals(Event("lib_convention_interface", "simple_method")) { simpleMethod() }
+            }
+            with(sample3) {
+                assertEquals(Event("sampleinterface", "sampleinterfacemethod1")) { method1() }
+                assertEquals(Event("sampleinterface", "sampleinterfacemethod2")) { method2() }
+            }
+        }
+    }
+
     internal interface SampleGroupInterface {
         fun sampleInterface(): SampleInterface
         fun analyticsInterface(): AnalyticsInterface
@@ -267,5 +297,16 @@ class AnalyticsGroupWrapperTest : GroupWrapperTest() {
         @Convention(UPPER_SNAKE_CASE) fun sampleConventionInterface(): SampleInterface
         fun conventionInterface(): AnalyticsLibConventionInterface
         @Convention(UPPER_SNAKE_CASE) fun conventionInterfaceWithOneMoreConvention(): AnalyticsLibConventionInterface
+    }
+
+    internal interface PropertiesGroupInterface {
+        val sample: SampleInterface
+        val convention: AnalyticsLibConventionInterface
+    }
+
+    internal interface PropertiesAnnotationInterface {
+        @Category("SAMPLE") val sample: SampleInterface
+        @Convention(UPPER_SNAKE_CASE) val sample2: AnalyticsLibConventionInterface
+        @HasPrefix val sample3: SampleInterface
     }
 }

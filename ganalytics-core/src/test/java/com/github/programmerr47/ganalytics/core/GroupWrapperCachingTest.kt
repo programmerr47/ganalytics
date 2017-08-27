@@ -77,7 +77,23 @@ class GroupWrapperCachingTest : GroupWrapperTest() {
         assertNotNull(wrapper.nameCache["OtherMixinGroupInterface.convention"])
         assertNotNull(wrapper.smartCache[""])
         assertNotNull(wrapper.smartCache["test"])
+    }
 
+    @Test
+    fun checkPropsWithMethodsCaching() {
+        run(PropMethodGroupInterface::class) {
+            val t1 = splitter
+            splitter()
+            val t2 = sample
+            sample()
+            convention()
+        }
+
+        assertEquals(1, wrapper.smartCache.size)
+        assertEquals(2, wrapper.nameCache.size)
+        assertNotNull(wrapper.nameCache["PropMethodGroupInterface.sample"])
+        assertNotNull(wrapper.nameCache["PropMethodGroupInterface.getSample"])
+        assertNotNull(wrapper.smartCache[""])
     }
 
     interface NotSmartGroupInterface {
@@ -103,5 +119,13 @@ class GroupWrapperCachingTest : GroupWrapperTest() {
         @Convention(LOWER_CAMEL_CASE) fun simple1(): AnalyticsInterface
         @HasPrefix fun convention(): AnalyticsLibConventionInterface
         @Category("test")  fun simple2(): AnalyticsInterface
+    }
+
+    interface PropMethodGroupInterface {
+        val splitter: SplitterInterface
+        fun convention(): AnalyticsLibConventionInterface
+        @HasPrefix val sample: SampleInterface
+        @HasPrefix fun sample(): SampleInterface
+        fun splitter(): SplitterInterface
     }
 }
