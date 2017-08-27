@@ -62,10 +62,6 @@ class AnalyticsGroupWrapper(
         }
     }
 
-    private fun <T : KClass<out Annotation>> Collection<T>.getAnnotations(method: Method, clazz: Class<*>): Annotations {
-        return mapNotNull { it.getFrom(method, clazz) }
-    }
-
     private inline fun <K> MutableMap<K, AnalyticsWrapper>.getOrPut(keygen: () -> K, defAnnotations: AnalyticsDefAnnotations): AnalyticsWrapper {
         return synchronized(this) {
             getOrPut(keygen()) { CacheWrapper(AnalyticsSingleWrapper(eventProvider, globalSettings, defAnnotations)) }

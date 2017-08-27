@@ -7,7 +7,13 @@ import kotlin.reflect.KClass
 annotation class HasPrefix(val name: String = "", val splitter: String = "")
 
 @Target(CLASS, FUNCTION, PROPERTY)
+annotation class HasPostfix(val name: String = "", val splitter: String = "")
+
+@Target(CLASS, FUNCTION, PROPERTY)
 annotation class NoPrefix
+
+@Target(CLASS, FUNCTION, PROPERTY)
+annotation class NoPostfix
 
 @Target(CLASS, FUNCTION, PROPERTY)
 annotation class Category(val name: String = "")
