@@ -2,7 +2,6 @@ package com.github.programmerr47.ganalytics.core
 
 import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Proxy
-import kotlin.reflect.KClass
 
 class AnalyticsSingleWrapper(
         private val eventProvider: EventProvider,
@@ -13,11 +12,11 @@ class AnalyticsSingleWrapper(
     @Suppress("unchecked_cast")
     override fun <T : Any> create(clazz: Class<T>): T {
         return Proxy.newProxyInstance(clazz.classLoader, arrayOf<Class<*>>(clazz)) { _, method, args ->
-            val convention = getAnnotation(Convention::class, clazz, defAnnotations)?.value ?: globalSettings.namingConvention
+            val convention = Convention::class.getFrom(clazz, defAnnotations)?.value ?: globalSettings.namingConvention
             val category = applyCategory(applyConvention(convention, clazz.analyticsName), clazz, defAnnotations)
 
             val defaultAction = applyAction(method, applyConvention(convention, method.name))
-            val action = if (getAnnotation(NoPrefix::class, method, clazz, defAnnotations) != null) {
+            val action = if (NoPrefix::class.getFrom(method, clazz, defAnnotations) != null) {
                 defaultAction
             } else {
                 applyPrefix(defaultAction, category, method, clazz, defAnnotations)
@@ -38,8 +37,9 @@ class AnalyticsSingleWrapper(
     else
         simpleName
 
-    private fun applyCategory(default: String, vararg elements: AnnotatedElement) =
-            applyCategory(getAnnotation(Category::class, *elements), default)
+    private fun applyCategory(default: String, vararg elements: AnnotatedElement): String {
+        return applyCategory(Category::class.getFrom(*elements), default)
+    }
 
     private fun applyCategory(category: Category?, default: String): String {
         return category?.name?.takeNotEmpty() ?: default
@@ -47,12 +47,12 @@ class AnalyticsSingleWrapper(
 
     private fun applyAction(element: AnnotatedElement, default: String): String {
         return element.getAnnotation(LabelFun::class.java)?.action ?:
-                element.getAnnotation(Action::class.java)?.name ?:
+                element.getAnnotation(Action::class.java)?.name?.takeNotEmpty() ?:
                 default
     }
 
     private fun applyPrefix(input: String, default: String, vararg elements: AnnotatedElement): String {
-        return applyPrefix(input, default, getAnnotation(HasPrefix::class, *elements))
+        return applyPrefix(input, default, HasPrefix::class.getFrom(*elements))
     }
 
     private fun applyPrefix(input: String, default: String, hasPrefix: HasPrefix?): String {
@@ -78,16 +78,8 @@ class AnalyticsSingleWrapper(
             LabelArgsManager(convention)
         } else default
     }
-
-    private fun <T : Annotation> getAnnotation(clazz: KClass<T>, vararg elements: AnnotatedElement): T? {
-        return elements.map { it.getAnnotation(clazz.java) }.firstOrNull { it != null }
-    }
 }
 
-internal fun applyConvention(convention: NamingConvention, name: String) = convention
-        .withFirstFixingBadCodeStyle()
-        .convert(name.decapitalize())
-
 inline fun AnalyticsSingleWrapper(crossinline provider: (Event) -> Unit,
-                                 globalSettings: GanalyticsSettings = GanalyticsSettings()) =
+                                  globalSettings: GanalyticsSettings = GanalyticsSettings()) =
         AnalyticsSingleWrapper(EventProvider(provider), globalSettings)
