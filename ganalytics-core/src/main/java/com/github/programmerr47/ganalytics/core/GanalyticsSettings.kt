@@ -17,6 +17,7 @@ fun <T : Any> converters(vararg elements: TypedConverterPair<T>) = ConcatList(ha
 
 class GanalyticsSettings {
     var prefixSplitter: String = ""
+    var postfixSplitter: String = ""
     var namingConvention: NamingConvention = NamingConventions.LOWER_CASE
     var cutOffAnalyticsClassPrefix: Boolean = true
     var labelTypeConverters: ConcatList = converters<Any>()

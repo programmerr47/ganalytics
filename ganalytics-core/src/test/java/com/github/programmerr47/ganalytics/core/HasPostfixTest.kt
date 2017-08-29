@@ -7,16 +7,16 @@ class HasPostfixTest : SingleWrapperTest() {
     @Test
     fun checkSpecificNamePostfixOnWholeInterface() {
         run(SpecificNamePostfixInterface::class) {
-            assertEquals(Event("specificnameprefixinterface", "method1postfix")) { method1() }
-            assertEquals(Event("specificnameprefixinterface", "method2postfix")) { method2() }
+            assertEquals(Event("specificnamepostfixinterface", "method1postfix")) { method1() }
+            assertEquals(Event("specificnamepostfixinterface", "method2postfix")) { method2() }
         }
     }
 
     @Test
     fun checkSpecificNamePrefixOnSingleMethod() {
         run(InterfaceWithSpecificNamePostfixOnMethod::class) {
-            assertEquals(Event("interfacewithspecificnameprefixonmethod", "method1postfix")) { method1() }
-            assertEquals(Event("interfacewithspecificnameprefixonmethod", "method2")) { method2() }
+            assertEquals(Event("interfacewithspecificnamepostfixonmethod", "method1postfix")) { method1() }
+            assertEquals(Event("interfacewithspecificnamepostfixonmethod", "method2")) { method2() }
         }
     }
 

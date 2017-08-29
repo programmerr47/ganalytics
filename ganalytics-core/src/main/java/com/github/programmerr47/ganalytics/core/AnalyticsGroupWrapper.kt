@@ -14,7 +14,11 @@ class AnalyticsGroupWrapper(
     internal val nameCache: MutableMap<String, AnalyticsWrapper> by lazy { HashMap<String, AnalyticsWrapper>() }
     internal val smartCache: MutableMap<String, AnalyticsWrapper> by lazy { HashMap<String, AnalyticsWrapper>() }
 
-    private val notSmartAnnotations = listOf(HasPrefix::class, NoPrefix::class, Convention::class)
+    private val notSmartAnnotations = listOf(
+            HasPrefix::class, NoPrefix::class,
+            HasPostfix::class, NoPostfix::class,
+            Convention::class)
+
     private val requiredAnnotations = notSmartAnnotations + Category::class
 
     @Suppress("unchecked_cast")

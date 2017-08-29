@@ -16,10 +16,15 @@ class AnalyticsSingleWrapper(
             val category = applyCategory(applyConvention(convention, clazz.analyticsName), clazz, defAnnotations)
 
             val defaultAction = applyAction(method, applyConvention(convention, method.name))
-            val action = if (NoPrefix::class.getFrom(method, clazz, defAnnotations) != null) {
+            val prefixAction = if (NoPrefix::class.getFrom(method, clazz, defAnnotations) != null) {
                 defaultAction
             } else {
                 applyPrefix(defaultAction, category, method, clazz, defAnnotations)
+            }
+            val finalAction = if (NoPostfix::class.getFrom(method, clazz, defAnnotations) != null) {
+                prefixAction
+            } else {
+                applyPostfix(prefixAction, method, clazz, defAnnotations)
             }
 
             val argsManager = resolveArgsMananger(method, convention, actionArgsManager)
@@ -27,7 +32,7 @@ class AnalyticsSingleWrapper(
             val label = labelArg ?: ""
             val value = (valueArg ?: 0).toLong()
 
-            val event = Event(category, action, label, value)
+            val event = Event(category, finalAction, label, value)
             eventProvider.provide(event)
         } as T
     }
@@ -51,6 +56,16 @@ class AnalyticsSingleWrapper(
                 default
     }
 
+    private fun applyPostfix(input: String, vararg elements: AnnotatedElement): String {
+        return applyPostfix(input, HasPostfix::class.getFrom(*elements))
+    }
+
+    private fun applyPostfix(input: String, hasPostfix: HasPostfix?): String {
+        return input + (hasPostfix?.run { globalSplitter + name } ?: "")
+    }
+
+    private val HasPostfix.globalSplitter get() = splitter.getOr(globalSettings.postfixSplitter)
+
     private fun applyPrefix(input: String, default: String, vararg elements: AnnotatedElement): String {
         return applyPrefix(input, default, HasPrefix::class.getFrom(*elements))
     }
@@ -59,7 +74,7 @@ class AnalyticsSingleWrapper(
         return if (hasPrefix == null) input else applyPrefix(input, default, hasPrefix.name, hasPrefix.globalSplitter)
     }
 
-    private val HasPrefix.globalSplitter get() = if (splitter == "") globalSettings.prefixSplitter else splitter
+    private val HasPrefix.globalSplitter get() = splitter.getOr(globalSettings.prefixSplitter)
 
     private fun applyPrefix(input: String, default: String, prefix: String, splitter: String): String {
         return (prefix.getOr(default)) + splitter + input
