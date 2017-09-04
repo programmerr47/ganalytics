@@ -1,5 +1,10 @@
 package com.github.programmerr47.ganalytics.core
 
+interface SampleGroupInterface {
+    fun sampleInterface(): SampleInterface
+    fun analyticsInterface(): AnalyticsInterface
+}
+
 interface SampleInterface {
     fun method1()
     fun method2()

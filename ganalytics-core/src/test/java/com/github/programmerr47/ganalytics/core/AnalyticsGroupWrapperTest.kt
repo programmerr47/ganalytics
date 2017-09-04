@@ -223,11 +223,6 @@ class AnalyticsGroupWrapperTest : GroupWrapperTest() {
         }
     }
 
-    internal interface SampleGroupInterface {
-        fun sampleInterface(): SampleInterface
-        fun analyticsInterface(): AnalyticsInterface
-    }
-
     @HasPrefix(splitter = "_")
     internal interface PrefixGroupInterface : SampleGroupInterface
 

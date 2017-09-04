@@ -1,14 +1,13 @@
 package com.github.programmerr47.ganalytics.core
 
 import java.lang.reflect.Method
-import java.lang.reflect.Proxy
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
 internal typealias Annotations = List<Annotation>
 
-class AnalyticsGroupWrapper(
+class AnalyticsGroupWrapper @JvmOverloads constructor(
         private val eventProvider: EventProvider,
         private val globalSettings: GanalyticsSettings = GanalyticsSettings()) : AnalyticsWrapper {
     internal val nameCache: MutableMap<String, AnalyticsWrapper> by lazy { HashMap<String, AnalyticsWrapper>() }
@@ -30,7 +29,7 @@ class AnalyticsGroupWrapper(
     override fun <T : Any> create(clazz: Class<T>) = createProxy(clazz) as T
 
     private fun createProxy(clazz: Class<*>, props: Iterable<KProperty1<*, *>> = listOf()): Any {
-        return Proxy.newProxyInstance(clazz.classLoader, arrayOf(clazz)) { _, method, _ ->
+        return wrapObjMethods(clazz) { _, method, _ ->
             val prop = props.find(method)
             val propAnnotations = prop?.annotations ?: listOf()
             val transform: (KClass<out Annotation>) -> Annotation? = {
@@ -45,7 +44,7 @@ class AnalyticsGroupWrapper(
     }
 
     private fun Iterable<KProperty1<*, *>>.find(method: Method): KProperty1<*, *>? {
-        if (method.parameterCount != 0) return null
+        if (method.parameterTypes.isNotEmpty()) return null
         return find { convert(it.getter.name) == method.name }
     }
 
