@@ -15,7 +15,12 @@ class LabelArgsManager(
         else -> throw IllegalArgumentException("Method ${method.name} are label, so it can have up to 1 parameter, which is value")
     }
 
-    private fun buildPair(method: Method, value: Number?) = Pair(applyConvention(convention, method.name), value)
+    private fun buildPair(method: Method, value: Number?) = Pair(buildLabel(method), value)
+
+    private fun buildLabel(method: Method): String {
+        return method.getAnnotation(LabelFun::class.java)?.label?.takeNotEmpty() ?:
+                applyConvention(convention, method.name)
+    }
 
     private fun manageArgAsValue(method: Method, args: Array<Any>): Number? {
         return manageValueArg(method, args[0], method.parameterAnnotations[0].label())

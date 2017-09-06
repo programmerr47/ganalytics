@@ -77,10 +77,6 @@ class AnalyticsSingleWrapper @JvmOverloads constructor(
         return (prefix.getOr(default)) + splitter + input
     }
 
-    private fun String.getOr(default: String) = takeNotEmpty() ?: default
-
-    private fun String.takeNotEmpty() = takeUnless(String::isEmpty)
-
     private fun resolveArgsMananger(element: AnnotatedElement, convention: NamingConvention, default: ArgsManager): ArgsManager {
         return if (element.getAnnotation(LabelFun::class.java) != null) {
             if (element.getAnnotation(Action::class.java) != null) {

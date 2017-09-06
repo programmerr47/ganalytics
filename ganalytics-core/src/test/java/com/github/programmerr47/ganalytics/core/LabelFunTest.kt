@@ -36,6 +36,13 @@ class LabelFunTest : SingleWrapperTest() {
         }
     }
 
+    @Test
+    fun checkSpecificLabelInLabelFun() {
+        run(SpecificLabelFunInterface::class) {
+            assertEquals(Event("specificlabelfuninterface", "action", "label")) { otherNameForLabel() }
+        }
+    }
+
     @Test(expected = IllegalStateException::class)
     fun checkErrorOnMixingActionAndLabelFun() {
         run(MixingActionAndLabelFunInteface::class) { label() }
@@ -62,6 +69,10 @@ class LabelFunTest : SingleWrapperTest() {
     @Convention(LOWER_SNAKE_CASE)
     interface LabelFunConventionInterface {
         @LabelFun("simpleaction") fun simpleLabel()
+    }
+
+    interface SpecificLabelFunInterface {
+        @LabelFun("action", "label") fun otherNameForLabel()
     }
 
     interface MixingActionAndLabelFunInteface {

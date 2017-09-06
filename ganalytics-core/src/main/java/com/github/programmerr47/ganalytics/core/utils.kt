@@ -10,3 +10,7 @@ internal fun <T : Annotation> KClass<T>.getFrom(vararg elements: AnnotatedElemen
 internal fun applyConvention(convention: NamingConvention, name: String) = convention
         .withFirstFixingBadCodeStyle()
         .convert(name.decapitalize())
+
+internal fun String.getOr(default: String) = takeNotEmpty() ?: default
+
+internal fun String.takeNotEmpty() = takeUnless(String::isEmpty)
