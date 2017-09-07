@@ -24,11 +24,11 @@ interface StableWrapperTest : WrapperTest {
 inline fun <T : Any> StableWrapperTest.run(clazz: KClass<T>, block: T.() -> Unit) = run(wrapper, clazz, block)
 
 abstract class SingleWrapperTest : StableWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
+    final override val testProvider: TestEventProvider = TestEventProvider()
     override val wrapper: AnalyticsSingleWrapper = AnalyticsSingleWrapper(testProvider)
 }
 
 abstract class GroupWrapperTest : StableWrapperTest {
-    override val testProvider: TestEventProvider = TestEventProvider()
+    final override val testProvider: TestEventProvider = TestEventProvider()
     override val wrapper: AnalyticsGroupWrapper = AnalyticsGroupWrapper(testProvider)
 }
