@@ -1,5 +1,6 @@
-package com.github.programmerr47.ganalytics.core
+package com.github.programmerr47.ganalytics.core.wrappers
 
+import com.github.programmerr47.ganalytics.core.*
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1

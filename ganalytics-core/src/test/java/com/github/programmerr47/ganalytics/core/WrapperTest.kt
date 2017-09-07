@@ -1,5 +1,8 @@
 package com.github.programmerr47.ganalytics.core
 
+import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsGroupWrapper
+import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsSingleWrapper
+import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsWrapper
 import org.junit.Assert
 import kotlin.reflect.KClass
 

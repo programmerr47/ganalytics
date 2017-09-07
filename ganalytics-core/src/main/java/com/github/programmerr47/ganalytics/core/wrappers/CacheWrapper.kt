@@ -1,4 +1,4 @@
-package com.github.programmerr47.ganalytics.core
+package com.github.programmerr47.ganalytics.core.wrappers
 
 import java.util.concurrent.ConcurrentHashMap
 

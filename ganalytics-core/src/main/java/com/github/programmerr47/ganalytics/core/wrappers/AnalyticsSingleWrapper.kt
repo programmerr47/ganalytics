@@ -1,5 +1,6 @@
-package com.github.programmerr47.ganalytics.core
+package com.github.programmerr47.ganalytics.core.wrappers
 
+import com.github.programmerr47.ganalytics.core.*
 import java.lang.reflect.AnnotatedElement
 
 class AnalyticsSingleWrapper @JvmOverloads constructor(

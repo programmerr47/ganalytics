@@ -1,5 +1,8 @@
 package com.github.programmerr47.ganalytics.core;
 
+import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsGroupWrapper;
+import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsSingleWrapper;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

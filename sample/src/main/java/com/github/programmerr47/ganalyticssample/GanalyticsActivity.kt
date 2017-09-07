@@ -3,6 +3,7 @@ package com.github.programmerr47.ganalyticssample
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.github.programmerr47.ganalytics.core.*
+import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsGroupWrapper
 
 import kotlinx.android.synthetic.main.activity_ganalytics.*
 
