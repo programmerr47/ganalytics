@@ -1,5 +1,6 @@
-package com.github.programmerr47.ganalytics.core
+package com.github.programmerr47.ganalytics.core.wrappers
 
+import com.github.programmerr47.ganalytics.core.*
 import com.github.programmerr47.ganalytics.core.NamingConventions.*
 import org.junit.Test
 
@@ -279,7 +280,8 @@ class AnalyticsGroupWrapperTest : GroupWrapperTest() {
     }
 
     internal interface InterfaceWithNoPrefixMethodButInnerHasPrefix {
-        @NoPrefix fun hasPrefixInterface(): AnalyticsHasPrefixInterface
+        @NoPrefix
+        fun hasPrefixInterface(): AnalyticsHasPrefixInterface
     }
 
     internal interface InterfaceWithConventionMethod : SampleGroupInterface {
@@ -302,6 +304,7 @@ class AnalyticsGroupWrapperTest : GroupWrapperTest() {
     internal interface PropertiesAnnotationInterface {
         @Category("SAMPLE") val sample: SampleInterface
         @Convention(UPPER_SNAKE_CASE) val sample2: AnalyticsLibConventionInterface
-        @HasPrefix val sample3: SampleInterface
+        @HasPrefix
+        val sample3: SampleInterface
     }
 }

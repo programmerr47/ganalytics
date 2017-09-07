@@ -1,7 +1,7 @@
-package com.github.programmerr47.ganalytics.core
+package com.github.programmerr47.ganalytics.core.wrappers
 
-import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsSingleWrapper
-import com.github.programmerr47.ganalytics.core.wrappers.CacheWrapper
+import com.github.programmerr47.ganalytics.core.EventProvider
+import com.github.programmerr47.ganalytics.core.SampleInterface
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

@@ -1,6 +1,9 @@
 package com.github.programmerr47.ganalytics.core
 
 import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsSingleWrapper
+import com.github.programmerr47.ganalytics.core.wrappers.WrapperTest
+import com.github.programmerr47.ganalytics.core.wrappers.assertEquals
+import com.github.programmerr47.ganalytics.core.wrappers.run
 import org.junit.Test
 import kotlin.reflect.KClass
 

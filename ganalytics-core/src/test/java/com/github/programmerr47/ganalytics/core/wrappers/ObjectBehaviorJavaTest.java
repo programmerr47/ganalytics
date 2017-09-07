@@ -1,8 +1,13 @@
-package com.github.programmerr47.ganalytics.core;
+package com.github.programmerr47.ganalytics.core.wrappers;
 
+import com.github.programmerr47.ganalytics.core.Event;
+import com.github.programmerr47.ganalytics.core.SampleGroupInterface;
+import com.github.programmerr47.ganalytics.core.SampleInterface;
+import com.github.programmerr47.ganalytics.core.TestEventProvider;
 import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsGroupWrapper;
 import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsSingleWrapper;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -20,7 +25,7 @@ public class ObjectBehaviorJavaTest {
     public void checkToString() {
         assertTrue(testSingleImpl.toString().startsWith("SampleInterface(Proxy)@"));
         assertTrue(testGroupImpl.toString().startsWith("SampleGroupInterface(Proxy)@"));
-        assertEquals(new Event("", ""), testProvider.getLastEvent());
+        Assert.assertEquals(new Event("", ""), testProvider.getLastEvent());
     }
 
     @Test

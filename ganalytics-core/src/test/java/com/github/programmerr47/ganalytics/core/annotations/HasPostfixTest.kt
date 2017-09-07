@@ -1,5 +1,9 @@
-package com.github.programmerr47.ganalytics.core
+package com.github.programmerr47.ganalytics.core.annotations
 
+import com.github.programmerr47.ganalytics.core.*
+import com.github.programmerr47.ganalytics.core.wrappers.SingleWrapperTest
+import com.github.programmerr47.ganalytics.core.wrappers.assertEquals
+import com.github.programmerr47.ganalytics.core.wrappers.run
 import org.junit.Test
 
 class HasPostfixTest : SingleWrapperTest() {

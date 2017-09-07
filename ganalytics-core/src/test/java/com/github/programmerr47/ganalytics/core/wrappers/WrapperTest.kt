@@ -1,8 +1,7 @@
-package com.github.programmerr47.ganalytics.core
+package com.github.programmerr47.ganalytics.core.wrappers
 
-import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsGroupWrapper
-import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsSingleWrapper
-import com.github.programmerr47.ganalytics.core.wrappers.AnalyticsWrapper
+import com.github.programmerr47.ganalytics.core.Event
+import com.github.programmerr47.ganalytics.core.TestEventProvider
 import org.junit.Assert
 import kotlin.reflect.KClass
 

@@ -1,5 +1,6 @@
-package com.github.programmerr47.ganalytics.core
+package com.github.programmerr47.ganalytics.core.wrappers
 
+import com.github.programmerr47.ganalytics.core.*
 import com.github.programmerr47.ganalytics.core.NamingConventions.LOWER_CAMEL_CASE
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -98,7 +99,8 @@ class GroupWrapperCachingTest : GroupWrapperTest() {
 
     interface NotSmartGroupInterface {
         @Convention(LOWER_CAMEL_CASE) fun splitter(): SplitterInterface
-        @HasPrefix fun convention(): AnalyticsLibConventionInterface
+        @HasPrefix
+        fun convention(): AnalyticsLibConventionInterface
     }
 
     interface SmartGroupInterface {
@@ -110,22 +112,26 @@ class GroupWrapperCachingTest : GroupWrapperTest() {
     interface MixinGroupInterface {
         @Convention(LOWER_CAMEL_CASE) fun splitter(): SplitterInterface
         fun simple1(): AnalyticsInterface
-        @HasPrefix fun convention(): AnalyticsLibConventionInterface
+        @HasPrefix
+        fun convention(): AnalyticsLibConventionInterface
         @Category("test") fun simple2(): AnalyticsInterface
     }
 
     interface OtherMixinGroupInterface {
         fun splitter(): SplitterInterface
         @Convention(LOWER_CAMEL_CASE) fun simple1(): AnalyticsInterface
-        @HasPrefix fun convention(): AnalyticsLibConventionInterface
+        @HasPrefix
+        fun convention(): AnalyticsLibConventionInterface
         @Category("test")  fun simple2(): AnalyticsInterface
     }
 
     interface PropMethodGroupInterface {
         val splitter: SplitterInterface
         fun convention(): AnalyticsLibConventionInterface
-        @HasPrefix val sample: SampleInterface
-        @HasPrefix fun sample(): SampleInterface
+        @HasPrefix
+        val sample: SampleInterface
+        @HasPrefix
+        fun sample(): SampleInterface
         fun splitter(): SplitterInterface
     }
 }
