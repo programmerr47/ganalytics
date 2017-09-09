@@ -2,6 +2,7 @@ package com.github.programmerr47.ganalytics.core.wrappers
 
 import com.github.programmerr47.ganalytics.core.*
 import com.github.programmerr47.ganalytics.core.NamingConventions.LOWER_SNAKE_CASE
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -44,8 +45,8 @@ class LabelChainWrapperTest : SingleWrapperTest() {
     @Test
     fun checkApplyingConventionToLabelInterfaces() {
         run(CategoryInterfaceWithConvention::class) {
-            assertEquals(Event("category_interface", "action", "other_label")) { action().otherLabel() }
-            assertEquals(Event("category_interface", "action", "value_label", 3)) { action().valueLabel(3) }
+            assertEquals(Event("category_interface_with_convention", "action", "other_label")) { action().otherLabel() }
+            assertEquals(Event("category_interface_with_convention", "action", "value_label", 3)) { action().valueLabel(3) }
         }
     }
 
@@ -56,6 +57,18 @@ class LabelChainWrapperTest : SingleWrapperTest() {
             val labelInterface2 = action()
             assertTrue(labelInterface1 == labelInterface2)
         }
+    }
+
+    @Test
+    fun checkCachingLabelInterfaceWithDifferentInterfaces() {
+        val labelInterface1 = wrapper.create(CategoryInterface::class).action()
+        val labelInterface2 = wrapper.create(CategoryInterfaceWithConvention::class).action()
+        val labelInterface3 = wrapper.create(StrangeInterface::class).action()
+        val labelInterface4 = wrapper.create(CategoryInterfaceWithConvention::class).action()
+
+        assertFalse(labelInterface1 == labelInterface3)
+        assertTrue(labelInterface2 == labelInterface4)
+        assertFalse(labelInterface1 == labelInterface2)
     }
 
     @Test
@@ -107,16 +120,9 @@ class LabelChainWrapperTest : SingleWrapperTest() {
     @HasPrefix
     @HasPostfix("postfix")
     interface LabelInterfaceWithUnusedAnnotations {
-        @Action("wow, action?!")
-        fun label()
-
-        @LabelFun("ok, action", "label?!")
-        fun otherLabel()
-
-        @NoPrefix
-        fun noPrefixLabel()
-
-        @NoPostfix
-        fun noPostfixLabel()
+        @Action("wow, action?!") fun label()
+        @LabelFun("ok, action", "label?!") fun otherLabel()
+        @NoPrefix fun noPrefixLabel()
+        @NoPostfix fun noPostfixLabel()
     }
 }
