@@ -9,7 +9,7 @@ Here is [latest changelog](https://github.com/programmerr47/ganalytics/releases/
 # Get library
 With gradle:
 ```
-compile 'com.github.programmerr47:ganalytics-core:1.0.0'
+compile 'com.github.programmerr47:ganalytics-core:1.1.0'
 ```
 
 With maven:
@@ -17,7 +17,7 @@ With maven:
 <dependency>
   <groupId>com.github.programmerr47</groupId>
   <artifactId>ganalytics-core</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <type>pom</type>
 </dependency>
 ```
