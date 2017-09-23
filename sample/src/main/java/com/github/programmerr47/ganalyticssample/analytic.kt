@@ -3,9 +3,9 @@ package com.github.programmerr47.ganalyticssample
 import com.github.programmerr47.ganalytics.core.*
 
 interface Analytics {
-    fun car(): AnalyticsCar
-    fun seller(): AnalyticsSeller
-    @HasPrefix fun customer(): AnalyticsCustomer
+    val car: AnalyticsCar
+    val seller: AnalyticsSeller
+    @HasPrefix val customer: AnalyticsCustomer
 }
 
 interface AnalyticsCar {

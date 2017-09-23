@@ -17,17 +17,17 @@ class GanalyticsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_ganalytics)
         placeholderStr.let { Event(it, it, it) }.printOnScreen()
 
-        b_car_price.setOnClickListener { analytics.car().price(Price(200, "dollars")) }
-        b_car_sold.setOnClickListener { analytics.car().isSold() }
-        b_car_type.setOnClickListener { analytics.car().type(CarType.CROSSOVER) }
+        b_car_price.setOnClickListener { analytics.car.price(Price(200, "dollars")) }
+        b_car_sold.setOnClickListener { analytics.car.isSold() }
+        b_car_type.setOnClickListener { analytics.car.type(CarType.CROSSOVER) }
 
-        b_customer_buy.setOnClickListener { analytics.customer().buyCar(Car(CarType.SEDAN, Price(300, "euro"))) }
-        b_customer_start.setOnClickListener { analytics.customer().startedSearching() }
-        b_customer_end.setOnClickListener { analytics.customer().endedSearching() }
+        b_customer_buy.setOnClickListener { analytics.customer.buyCar(Car(CarType.SEDAN, Price(300, "euro"))) }
+        b_customer_start.setOnClickListener { analytics.customer.startedSearching() }
+        b_customer_end.setOnClickListener { analytics.customer.endedSearching() }
 
-        b_seller_add.setOnClickListener { analytics.seller().addNewCarToSellList(Car(CarType.HATCHBACK, Price(256, "pounds"))) }
-        b_seller_fair.setOnClickListener { analytics.seller().isFair() }
-        b_seller_sell.setOnClickListener { analytics.seller().sellCar(Car(CarType.SUV, Price(500, "rubles"))) }
+        b_seller_add.setOnClickListener { analytics.seller.addNewCarToSellList(Car(CarType.HATCHBACK, Price(256, "pounds"))) }
+        b_seller_fair.setOnClickListener { analytics.seller.isFair() }
+        b_seller_sell.setOnClickListener { analytics.seller.sellCar(Car(CarType.SUV, Price(500, "rubles"))) }
     }
 
     private fun initGanalytics() = Ganalytics({ it.printOnScreen() }) {
