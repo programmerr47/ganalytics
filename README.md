@@ -4,7 +4,11 @@
 
 Ganalytics is tiny api layer for any analytics in application. It provides an object oriented, typesafe, strict and testable way to organize work with analytics in the application. More information on [wiki pages](https://github.com/programmerr47/ganalytics/wiki).
 
-Here is [latest changelog](https://github.com/programmerr47/ganalytics/releases/tag/v1.0).
+Here is [latest changelog](https://github.com/programmerr47/ganalytics/releases/tag/v1.1).
+
+Also, you can read these articles for more details:
+1) [Introduction to conception](https://medium.com/@programmerr47/declarative-analytics-ganalytics-4cb927b98be8)
+2) [V1.1 Changelog details](https://medium.com/@programmerr47/effective-application-analytic-832f950232b9)
 
 # Get library
 With gradle:
